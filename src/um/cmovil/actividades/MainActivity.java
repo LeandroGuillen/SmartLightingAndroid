@@ -1,5 +1,10 @@
-package um.cmovil;
+package um.cmovil.actividades;
 
+import um.cmovil.R;
+import um.cmovil.R.id;
+import um.cmovil.R.layout;
+import um.cmovil.R.menu;
+import um.cmovil.R.string;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.os.Bundle;

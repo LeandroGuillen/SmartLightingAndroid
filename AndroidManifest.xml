@@ -14,7 +14,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="um.cmovil.MainActivity"
+            android:name="um.cmovil.actividades.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,9 +23,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="um.cmovil.LoginActivity"
+            android:name="um.cmovil.actividades.LoginActivity"
             android:label="@string/title_activity_login"
-            android:parentActivityName="um.cmovil.MainActivity"
+            android:parentActivityName="um.cmovil.actividades.MainActivityMainActivity"
             android:windowSoftInputMode="adjustResize|stateVisible" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
