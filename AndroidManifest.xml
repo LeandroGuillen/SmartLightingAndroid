@@ -31,6 +31,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="um.cmovil.MainActivity" />
         </activity>
+        <activity
+            android:name="um.cmovil.actividades.FarolaListActivity"
+            android:label="@string/title_activity_farola_list" >
+        </activity>
     </application>
 
 </manifest>

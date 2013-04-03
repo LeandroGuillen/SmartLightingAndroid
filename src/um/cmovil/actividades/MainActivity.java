@@ -1,23 +1,16 @@
 package um.cmovil.actividades;
 
 import um.cmovil.R;
-import um.cmovil.R.id;
-import um.cmovil.R.layout;
-import um.cmovil.R.menu;
-import um.cmovil.R.string;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
-import android.os.Bundle;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.NavUtils;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -31,7 +24,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.OnNaviga
 	 */
 	private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
 
-	@Override	
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
@@ -46,6 +39,11 @@ public class MainActivity extends FragmentActivity implements ActionBar.OnNaviga
 		// Specify a SpinnerAdapter to populate the dropdown list.
 				new ArrayAdapter<String>(getActionBarThemedContextCompat(), android.R.layout.simple_list_item_1, android.R.id.text1, new String[] { getString(R.string.title_section1),
 						getString(R.string.title_section2), getString(R.string.title_section3), }), this);
+	}
+
+	public void verListaFarolas(View view) {
+		Intent intent = new Intent(this, FarolaListActivity.class);
+		startActivity(intent);
 	}
 
 	/**
@@ -117,6 +115,5 @@ public class MainActivity extends FragmentActivity implements ActionBar.OnNaviga
 			return rootView;
 		}
 	}
-	
 
 }
