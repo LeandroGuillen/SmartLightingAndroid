@@ -6,8 +6,8 @@ import java.util.List;
 import um.cmovil.R;
 import um.cmovil.actividades.adaptadores.FarolaAdapter;
 import um.cmovil.modelo.recursos.Farola;
-import um.cmovil.tasks.GetStatusTask;
 import um.cmovil.util.DownloadListener;
+import um.cmovil.util.HTTPAsyncTask;
 import um.cmovil.util.HTTPRequest;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -28,7 +28,7 @@ public class FarolaListActivity extends Activity {
 		prepararLista();
 
 		HTTPRequest statusRequest = new HTTPRequest(this, "192.168.1.55", 8080, "/temp/temp0", new MyDownloadListener(), "Jara", "TestKey");
-		new GetStatusTask().execute(statusRequest);
+		new HTTPAsyncTask().execute(statusRequest);
 	}
 
 	private void prepararLista() {
