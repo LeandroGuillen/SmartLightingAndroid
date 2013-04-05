@@ -107,8 +107,6 @@ public class LoginActivity extends Activity{
 					"Revisa los datos de login", Toast.LENGTH_SHORT).show();
 		}
 
-		// Close
-		finish();
 	}
 
 	/**
