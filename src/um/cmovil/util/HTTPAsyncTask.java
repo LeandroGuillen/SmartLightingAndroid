@@ -11,6 +11,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
+import um.cmovil.modelo.Controlador;
+
 import android.content.Context;
 import android.os.AsyncTask;
 
@@ -24,8 +26,8 @@ public class HTTPAsyncTask extends AsyncTask<HTTPRequest, String, String> {
 		Context appContext = httpreq.getContext();
 		downloadListener = httpreq.getDownloadListener();
 		String URL = httpreq.getURL();
-		String userAgent = httpreq.getUserAgent();
-		String key = httpreq.getKey();
+		String userAgent = Controlador.getUserAgent();
+		String key = Controlador.getKey();
 
 		String result = null;
 
@@ -37,7 +39,7 @@ public class HTTPAsyncTask extends AsyncTask<HTTPRequest, String, String> {
 				get.addHeader("Accept", "application/json");
 				get.addHeader("User-Agent", userAgent);
 				get.addHeader(HTTP.DATE_HEADER, time);
-				get.addHeader("apiKey", Utils.md5(key + time));
+				get.addHeader("apiKey", Utils.md5(Utils.md5(key) + time));
 				get.addHeader("Content-Length", "0");
 
 				HttpClient client = new DefaultHttpClient();

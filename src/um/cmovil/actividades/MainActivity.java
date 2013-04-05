@@ -1,6 +1,7 @@
 package um.cmovil.actividades;
 
 import um.cmovil.R;
+import um.cmovil.modelo.Controlador;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.content.Context;
@@ -29,6 +30,12 @@ public class MainActivity extends FragmentActivity implements ActionBar.OnNaviga
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		// Aqui se reciben los datos de inicio de sesion de la actividad de login
+		Controlador.setUserAgent("Jara");
+		Controlador.setKey("TestKey");
+		Controlador.setServer("192.168.1.132");
+		Controlador.setPort(8080);
+		
 		// Set up the action bar to show a dropdown list.
 		final ActionBar actionBar = getActionBar();
 		actionBar.setDisplayShowTitleEnabled(false);

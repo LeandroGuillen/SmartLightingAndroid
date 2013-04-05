@@ -24,10 +24,10 @@ public class FarolaListActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_farola_list);
-
+		
 		prepararLista();
 
-		HTTPRequest statusRequest = new HTTPRequest(this, "192.168.1.55", 8080, "/temp/temp0", new MyDownloadListener(), "Jara", "TestKey");
+		HTTPRequest statusRequest = new HTTPRequest(this, "/temp/temp0", new MyDownloadListener());
 		new HTTPAsyncTask().execute(statusRequest);
 	}
 
