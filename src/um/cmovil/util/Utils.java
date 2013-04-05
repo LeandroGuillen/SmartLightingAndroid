@@ -18,39 +18,42 @@ public class Utils {
 
 	public static final String GMT_TIMEZONE = "GMT";
 
-	public static final boolean isNetworkOk(Context context){
-		ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+	public static final boolean isNetworkOk(Context context) {
+		ConnectivityManager connMgr = (ConnectivityManager) context
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-		
+
 		return networkInfo != null && networkInfo.isConnected();
 	}
-	
-	public static final String md5(final String s) {
+
+	public static String md5(String source) {
 		try {
-			// Create MD5 Hash
-			MessageDigest digest = java.security.MessageDigest
-					.getInstance("MD5");
-			digest.update(s.getBytes());
-			byte messageDigest[] = digest.digest();
-
-			// Create Hex String
-			StringBuffer hexString = new StringBuffer();
-			for (int i = 0; i < messageDigest.length; i++) {
-				String h = Integer.toHexString(0xFF & messageDigest[i]);
-				while (h.length() < 2)
-					h = "0" + h;
-				hexString.append(h);
-			}
-			return hexString.toString();
-
-		} catch (NoSuchAlgorithmException e) {
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			byte[] bytes = md.digest(source.getBytes("UTF-8"));
+			return getString(bytes);
+		} catch (Exception e) {
 			e.printStackTrace();
+			return null;
 		}
-		return "";
 	}
-	
+
+	private static String getString(byte[] bytes) {
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < bytes.length; i++) {
+			byte b = bytes[i];
+			String hex = Integer.toHexString((int) 0x00FF & b);
+			if (hex.length() == 1) {
+				sb.append("0");
+			}
+			sb.append(hex);
+		}
+		return sb.toString();
+	}
+
 	/**
-	 * Time management based on https://svn.apache.org/repos/asf/wink/contrib/ibm-jaxrs/src/com/ibm/wsspi/jaxrs/http/DateHandler.java
+	 * Time management based on
+	 * https://svn.apache.org/repos/asf/wink/contrib/ibm
+	 * -jaxrs/src/com/ibm/wsspi/jaxrs/http/DateHandler.java
 	 */
 	private static final ThreadLocal<DateFormat> rfc1123DateFormat = new ThreadLocal<DateFormat>() {
 		@Override
@@ -176,7 +179,7 @@ public class Utils {
 						dateSince = asctimeDateFormatWithOneDayDigit.get()
 								.parse(dateInString);
 					} catch (ParseException ex4) {
-						
+
 						// could not parse, so return null
 						return null;
 					}
@@ -185,7 +188,6 @@ public class Utils {
 		}
 		return dateSince;
 	}
-
 
 	/**
 	 * Returns the current time as a String in HTTP date header format.
