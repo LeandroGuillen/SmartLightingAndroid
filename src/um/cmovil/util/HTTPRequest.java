@@ -27,7 +27,7 @@ public class HTTPRequest {
 	}
 
 	public String getURL() {
-		return "http://" + Controlador.getServer() + ":" + Controlador.getPort() + resource;
+		return "http://" + Controlador.getServer() + resource;
 	}
 
 }
