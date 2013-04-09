@@ -35,6 +35,10 @@
             android:name="um.cmovil.actividades.FarolaListActivity"
             android:label="@string/title_activity_farola_list" >
         </activity>
+        <activity
+            android:name="um.cmovil.actividades.MapActivity"
+            android:label="@string/title_activity_map" >
+        </activity>
     </application>
 
 </manifest>
