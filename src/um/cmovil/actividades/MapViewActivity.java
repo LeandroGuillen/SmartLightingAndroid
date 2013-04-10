@@ -1,10 +1,14 @@
 package um.cmovil.actividades;
 
+import java.util.ArrayList;
+
 import um.cmovil.R;
+import um.cmovil.util.LocationOverlay;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -28,6 +32,8 @@ public class MapViewActivity extends MapActivity {
 
 	MapView map;
 	MapController controller;
+	
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +44,15 @@ public class MapViewActivity extends MapActivity {
 		controller = map.getController();
 		map.setSatellite(true);
 
+		
+		// TODO : ÀItemizedOverlay y map en la misma clase?
+		
+		ArrayList<GeoPoint> locations = new ArrayList<GeoPoint>();
+		ArrayList<Drawable> images = new ArrayList<Drawable>();
+		
 		LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
+		LocationOverlay myOverlay = new LocationOverlay(this, getResources().getDrawable(R.drawable.ic_launcher));
+		
 		if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 			// Ask the user to enable GPS
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -90,8 +103,13 @@ public class MapViewActivity extends MapActivity {
 			// Default to Google HQ
 			lat = 38024076;
 			lng = -1173600;
+		
 		}
+		
+		myOverlay.setItems(locations, images);
+		map.getOverlays().add(myOverlay);
 		GeoPoint mapCenter = new GeoPoint(lat, lng);
+		//Dejamos el centro de la localizacion del GPS
 		controller.setCenter(mapCenter);
 		controller.setZoom(30);
 	}

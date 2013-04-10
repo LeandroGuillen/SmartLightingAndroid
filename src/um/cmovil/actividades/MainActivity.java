@@ -1,7 +1,6 @@
 package um.cmovil.actividades;
 
 import um.cmovil.R;
-import um.cmovil.modelo.Controlador;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.content.Context;
