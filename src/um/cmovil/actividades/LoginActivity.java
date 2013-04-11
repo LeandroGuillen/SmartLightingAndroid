@@ -1,5 +1,10 @@
 package um.cmovil.actividades;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 import um.cmovil.R;
 import um.cmovil.modelo.Controlador;
 import um.cmovil.util.DownloadListener;
@@ -15,7 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class LoginActivity extends Activity{
+public class LoginActivity extends Activity {
 
 	public static final String PREFS_NAME = "MyPrefsFile";
 
@@ -31,12 +36,58 @@ public class LoginActivity extends Activity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 
+		boolean serverOk = false;
+		boolean connectionOk = true;
+		String serverNumber = "";
+
+		try {
+
+			FileInputStream mInput = openFileInput("dataLogin.txt");
+
+			if (mInput.available() > 0) {
+
+				byte[] data = new byte[128];
+				mInput.read(data);
+				mInput.close();
+				serverNumber = new String(data);
+
+				serverOk = true;
+
+			}
+
+		} catch (FileNotFoundException e) {
+		} catch (IOException e) {
+		}
+
 		// Recover resources of the layout
 		user = (EditText) findViewById(R.id.UserEditText);
 		password = (EditText) findViewById(R.id.PasswordEditText);
-		server = (EditText) findViewById(R.id.ServerEditText);
 
-	
+		if (serverOk)
+			server.setText(serverNumber);
+		else {
+
+			server = (EditText) findViewById(R.id.ServerEditText);
+
+			// TODO : Cuando se pulse el boton y si la conexion se ha realizado
+			// con �xito, entonces guardamos el servidor
+
+			if (connectionOk)
+
+				try {
+
+					FileOutputStream mOutput = openFileOutput("dataLogin.txt",
+							Activity.MODE_PRIVATE);
+					mOutput.write(server.getText().toString().getBytes());
+					mOutput.close();
+
+				} catch (FileNotFoundException e) {
+					
+				}catch (IOException e) {
+					
+				}
+		}
+
 		// Retrieve or create the preferences object
 		// File defined in FormActivity.xml
 		// formStore = getPreferences(Activity.MODE_PRIVATE);
@@ -48,11 +99,15 @@ public class LoginActivity extends Activity{
 
 	@Override
 	public void onResume() {
+
 		super.onResume();
 		// Set a Toast to notify that it is onResume
+
 		Context context = getApplicationContext();
 		CharSequence text = "onResume!";
+
 		int duration = Toast.LENGTH_SHORT;
+
 		Toast toast = Toast.makeText(context, text, duration);
 		toast.show();
 
@@ -97,10 +152,10 @@ public class LoginActivity extends Activity{
 			Controlador.setUserAgent(user.getText().toString());
 			Controlador.setKey(password.getText().toString());
 			Controlador.setServer(server.getText().toString());
-			HTTPRequest httpRequest = new HTTPRequest(this,"/testauth",new MyDownloadListener());
+			HTTPRequest httpRequest = new HTTPRequest(this, "/testauth",
+					new MyDownloadListener());
 			new HTTPAsyncTask().execute(httpRequest);
-			
-				
+
 		} else {
 
 			Toast.makeText(getApplicationContext(),
@@ -123,8 +178,6 @@ public class LoginActivity extends Activity{
 				&& server.getTextSize() != 0;
 	}
 
-	
-
 	private class MyDownloadListener implements DownloadListener {
 
 		@Override
@@ -140,7 +193,9 @@ public class LoginActivity extends Activity{
 
 		@Override
 		public void downloadFailed() {
-			Toast.makeText(LoginActivity.this, "No se pudo realizar la conexión", Toast.LENGTH_SHORT).show();
+			Toast.makeText(LoginActivity.this,
+					"No se pudo realizar la conexión", Toast.LENGTH_SHORT)
+					.show();
 		}
 	}
 }
