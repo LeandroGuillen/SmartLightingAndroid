@@ -33,7 +33,8 @@ public class HTTPAsyncTask extends AsyncTask<HTTPRequest, String, String> {
 
 		if (Utils.isNetworkOk(appContext)) {
 			try {
-				String time = Utils.getCurrentDateAsStringInRFC1123Format(Utils.GMT_TIMEZONE);
+				String time = Utils
+						.getCurrentDateAsStringInRFC1123Format(Utils.GMT_TIMEZONE);
 
 				HttpGet get = new HttpGet(URL);
 				get.addHeader("Accept", "application/json");
@@ -44,6 +45,9 @@ public class HTTPAsyncTask extends AsyncTask<HTTPRequest, String, String> {
 
 				HttpClient client = new DefaultHttpClient();
 				HttpResponse response = client.execute(get);
+				
+				// TODO : Coger la cookie del response.
+				
 
 				// Get response
 				HttpEntity httpEntity = response.getEntity();

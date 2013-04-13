@@ -40,6 +40,8 @@ public class LoginActivity extends Activity {
 		boolean connectionOk = true;
 		String serverNumber = "";
 
+		// Lee el servidor desde el fichero dataLogin.txt
+
 		try {
 
 			FileInputStream mInput = openFileInput("dataLogin.txt");
@@ -50,7 +52,6 @@ public class LoginActivity extends Activity {
 				mInput.read(data);
 				mInput.close();
 				serverNumber = new String(data);
-
 				serverOk = true;
 
 			}
@@ -60,13 +61,22 @@ public class LoginActivity extends Activity {
 		}
 
 		// Recover resources of the layout
+
 		user = (EditText) findViewById(R.id.UserEditText);
 		password = (EditText) findViewById(R.id.PasswordEditText);
 
+		
+		// Comprobamos si se ha podido leer el servidor
+		
 		if (serverOk)
+			
 			server.setText(serverNumber);
+		
 		else {
 
+
+			Toast.makeText(getApplicationContext(),
+					"No se ha podido leer el servidor desde dataLogin", Toast.LENGTH_SHORT).show();
 			server = (EditText) findViewById(R.id.ServerEditText);
 
 			// TODO : Cuando se pulse el boton y si la conexion se ha realizado
@@ -82,9 +92,9 @@ public class LoginActivity extends Activity {
 					mOutput.close();
 
 				} catch (FileNotFoundException e) {
-					
-				}catch (IOException e) {
-					
+
+				} catch (IOException e) {
+
 				}
 		}
 
@@ -150,9 +160,10 @@ public class LoginActivity extends Activity {
 		if (validar()) {
 
 			Controlador.setUserAgent(user.getText().toString());
+			
 			Controlador.setKey(password.getText().toString());
 			Controlador.setServer(server.getText().toString());
-			HTTPRequest httpRequest = new HTTPRequest(this, "/testauth",
+			HTTPRequest httpRequest = new HTTPRequest(this, "/auth",
 					new MyDownloadListener());
 			new HTTPAsyncTask().execute(httpRequest);
 

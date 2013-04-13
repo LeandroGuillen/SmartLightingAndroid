@@ -25,6 +25,7 @@ public class Controlador {
 		return userAgent;
 	}
 
+	// FIXME : User-Agent parece ser siempre machacado para colocar el navegador. La cabecera deber’a ser "User";
 	public static void setUserAgent(String userAgent) {
 		Controlador.userAgent = userAgent;
 	}
