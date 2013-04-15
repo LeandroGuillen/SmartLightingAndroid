@@ -12,6 +12,7 @@ public class Controlador {
 	private static String key;
 	private static String server;
 	private static Map<String, Farola> farolas = new HashMap<String, Farola>();
+	private static String cookie;
 
 	public static String getServer() {
 		return server;
@@ -50,6 +51,14 @@ public class Controlador {
 		List<Farola> misFarolas = new LinkedList<Farola>();
 		misFarolas.addAll(farolas.values());
 		return misFarolas;
+	}
+
+	public static void setCookie(String cookie) {
+		Controlador.cookie = cookie;
+	}
+	
+	public static String getCookie(){
+		return Controlador.cookie;
 	}
 
 }

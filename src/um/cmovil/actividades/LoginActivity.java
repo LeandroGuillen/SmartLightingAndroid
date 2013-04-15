@@ -5,6 +5,11 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.ParseException;
+import org.apache.http.util.EntityUtils;
+
 import um.cmovil.R;
 import um.cmovil.modelo.Controlador;
 import um.cmovil.util.DownloadListener;
@@ -25,7 +30,6 @@ public class LoginActivity extends Activity {
 	public static final String PREFS_NAME = "MyPrefsFile";
 
 	private EditText user, password, server;
-	private Button login;
 
 	SharedPreferences formStore;
 
@@ -65,25 +69,24 @@ public class LoginActivity extends Activity {
 		user = (EditText) findViewById(R.id.UserEditText);
 		password = (EditText) findViewById(R.id.PasswordEditText);
 
-		
 		// Comprobamos si se ha podido leer el servidor
-		
+
 		if (serverOk)
-			
+
 			server.setText(serverNumber);
-		
+
 		else {
 
-
 			Toast.makeText(getApplicationContext(),
-					"No se ha podido leer el servidor desde dataLogin", Toast.LENGTH_SHORT).show();
+					"No se ha podido leer el servidor desde dataLogin",
+					Toast.LENGTH_SHORT).show();
 			server = (EditText) findViewById(R.id.ServerEditText);
+			
+			
 
-			// TODO : Cuando se pulse el boton y si la conexion se ha realizado
-			// con Žxito, entonces guardamos el servidor
+			if (connectionOk && !serverOk)
 
-			if (connectionOk)
-
+				// La conexion se ha establecido con exito, guarda el servidor.
 				try {
 
 					FileOutputStream mOutput = openFileOutput("dataLogin.txt",
@@ -160,11 +163,12 @@ public class LoginActivity extends Activity {
 		if (validar()) {
 
 			Controlador.setUserAgent(user.getText().toString());
-			
+
 			Controlador.setKey(password.getText().toString());
 			Controlador.setServer(server.getText().toString());
 			HTTPRequest httpRequest = new HTTPRequest(this, "/auth",
 					new MyDownloadListener());
+			
 			new HTTPAsyncTask().execute(httpRequest);
 
 		} else {
@@ -192,14 +196,42 @@ public class LoginActivity extends Activity {
 	private class MyDownloadListener implements DownloadListener {
 
 		@Override
-		public void downloadOk(Object result) {
+		public void downloadOk(HttpResponse response) {
 			Context context = (Context) LoginActivity.this;
-
+			// TODO : Coger la respuesta y extraer datos de ella
+			
+			
+			Controlador.setCookie(response.getHeaders("Cookie")[0].getValue());
+			
 			AlertDialog.Builder dialog = new AlertDialog.Builder(context);
 			dialog.setTitle("Information");
+
+			HttpEntity httpEntity = response.getEntity();
+
+			String result = null;
+			
+			// TODO : Verificar que hace falta este c—digo, es posible que valga con response.toSTring();
+			try {
+				result = EntityUtils.toString(httpEntity);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 			dialog.setMessage((String) result);
 			dialog.setPositiveButton("OK", null);
 			dialog.show();
+			
+			/*
+			 * 				// Get response
+			 */
+			
+			Toast.makeText(LoginActivity.this,
+					"Respuesta http recibida", Toast.LENGTH_SHORT)
+					.show();
 		}
 
 		@Override

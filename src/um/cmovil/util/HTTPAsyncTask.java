@@ -12,24 +12,22 @@ import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
 import um.cmovil.modelo.Controlador;
-
 import android.content.Context;
 import android.os.AsyncTask;
 
-public class HTTPAsyncTask extends AsyncTask<HTTPRequest, String, String> {
+public class HTTPAsyncTask extends AsyncTask<HTTPRequest, String, HttpResponse> {
 
 	private DownloadListener downloadListener;
 
 	@Override
-	protected String doInBackground(HTTPRequest... obj) {
+	protected HttpResponse doInBackground(HTTPRequest... obj) {
 		HTTPRequest httpreq = obj[0];
 		Context appContext = httpreq.getContext();
 		downloadListener = httpreq.getDownloadListener();
 		String URL = httpreq.getURL();
 		String userAgent = Controlador.getUserAgent();
 		String key = Controlador.getKey();
-
-		String result = null;
+		HttpResponse response = null;
 
 		if (Utils.isNetworkOk(appContext)) {
 			try {
@@ -44,14 +42,8 @@ public class HTTPAsyncTask extends AsyncTask<HTTPRequest, String, String> {
 				get.addHeader("Content-Length", "0");
 
 				HttpClient client = new DefaultHttpClient();
-				HttpResponse response = client.execute(get);
-				
-				// TODO : Coger la cookie del response.
-				
+				response = client.execute(get);
 
-				// Get response
-				HttpEntity httpEntity = response.getEntity();
-				result = EntityUtils.toString(httpEntity);
 
 			} catch (ClientProtocolException e) {
 				e.printStackTrace();
@@ -60,13 +52,13 @@ public class HTTPAsyncTask extends AsyncTask<HTTPRequest, String, String> {
 			}
 
 		}
-		return result;
+		return response;
 	}
 
 	@Override
-	protected void onPostExecute(String result) {
-		if (result != null)
-			downloadListener.downloadOk(result);
+	protected void onPostExecute(HttpResponse response) {
+		if (response != null)
+			downloadListener.downloadOk(response);
 		else
 			downloadListener.downloadFailed();
 	}
