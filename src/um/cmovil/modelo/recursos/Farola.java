@@ -1,33 +1,32 @@
 package um.cmovil.modelo.recursos;
 
+import com.google.android.maps.GeoPoint;
+
 public class Farola {
 	private boolean encendida;
 	private Integer dim;
 	private Integer distancia;
 	private String nombre;
 	private static int contador = 0;
+	private GeoPoint geoPoint;
 
 	public Farola() {
-		this(false, 0);
+		this("farola__" + (contador++), false, 0);
 	}
 
-	public Farola(boolean encendida) {
-		this(false, 0);
+	public Farola(String nombre) {
+		this(nombre, false, 0);
 	}
 
-	public Farola(boolean encendida, int dim) {
+	private Farola(String nombre, boolean encendida, int dim) {
 		setEncendida(encendida);
 		setDim(dim);
-		setNombre("farola" + (contador++));
+		setNombre(nombre);
 		setDistancia(0);
 	}
 
 	public boolean isEncendida() {
 		return encendida;
-	}
-
-	private void setEncendida(boolean encendida) {
-		this.encendida = encendida;
 	}
 
 	public void apagar() {
@@ -43,6 +42,13 @@ public class Farola {
 			apagar();
 		else
 			encender();
+	}
+
+	public void setEncendida(boolean e) {
+		if (e)
+			encender();
+		else
+			apagar();
 	}
 
 	public Integer getDim() {
@@ -72,5 +78,13 @@ public class Farola {
 	@Override
 	public String toString() {
 		return getNombre() + " - encendida:" + isEncendida();
+	}
+
+	public GeoPoint getGeoPoint() {
+		return geoPoint;
+	}
+
+	public void setGeoPoint(GeoPoint geoPoint) {
+		this.geoPoint = geoPoint;
 	}
 }

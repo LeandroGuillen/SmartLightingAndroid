@@ -5,7 +5,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import um.cmovil.modelo.recursos.Farola;
+
+import com.google.android.maps.GeoPoint;
 
 public class Controlador {
 	private static String userAgent;
@@ -49,6 +55,27 @@ public class Controlador {
 		List<Farola> misFarolas = new LinkedList<Farola>();
 		misFarolas.addAll(farolas.values());
 		return misFarolas;
+	}
+
+	public static void addFarolasFromJSON(String jsonData) throws JSONException {
+		JSONArray lista = new JSONArray(jsonData);
+
+		for (int i = 0; i < lista.length(); i++) {
+			JSONObject json = lista.getJSONObject(i);
+
+			String nombre = json.getString("nombre");
+			boolean encendida = json.getBoolean("encendida");
+			int dim = json.getInt("dim");
+			int lon = json.getInt("lon");
+			int lat = json.getInt("lat");
+
+			Farola f = new Farola(nombre);
+			f.setDim(dim);
+			f.setGeoPoint(new GeoPoint(lat, lon));
+			f.setEncendida(encendida);
+			
+			addFarola(f);
+		}
 	}
 
 }

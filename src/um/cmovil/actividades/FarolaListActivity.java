@@ -1,5 +1,7 @@
 package um.cmovil.actividades;
 
+import org.json.JSONException;
+
 import um.cmovil.R;
 import um.cmovil.actividades.adaptadores.FarolaAdapter;
 import um.cmovil.modelo.Controlador;
@@ -27,7 +29,7 @@ public class FarolaListActivity extends Activity {
 
 		prepararLista();
 
-		HTTPRequest statusRequest = new HTTPRequest(this, "/temp/temp0", new MyDownloadListener());
+		HTTPRequest statusRequest = new HTTPRequest(this, "/resources/streetlight/testlist", new MyDownloadListener());
 		new HTTPAsyncTask().execute(statusRequest);
 	}
 
@@ -35,12 +37,6 @@ public class FarolaListActivity extends Activity {
 
 		// We get the ListView component from the layout
 		final ListView lv = (ListView) findViewById(R.id.listViewFarolas);
-
-		// TODO Farolas de prueba: Obtener lista de farolas del servidor
-		Controlador.addFarola(new Farola(false, 0));
-		Controlador.addFarola(new Farola(false, 0));
-		Controlador.addFarola(new Farola(true, 100));
-		Controlador.addFarola(new Farola(true, 19));
 
 		farolaAdapter = new FarolaAdapter(this, Controlador.getListaFarolas());
 		lv.setAdapter(farolaAdapter);
@@ -62,13 +58,21 @@ public class FarolaListActivity extends Activity {
 
 		@Override
 		public void downloadOk(Object result) {
-			Context context = (Context) FarolaListActivity.this;
+			try {
 
-			AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-			dialog.setTitle("Information");
-			dialog.setMessage((String) result);
-			dialog.setPositiveButton("OK", null);
-			dialog.show();
+				// Actualizar datos locales
+				Controlador.addFarolasFromJSON((String) result);
+
+				// Mostrar mensaje por pantalla
+				Context context = (Context) FarolaListActivity.this;
+				AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+				dialog.setTitle("Information");
+				dialog.setMessage((String) result);
+				dialog.setPositiveButton("OK", null);
+				dialog.show();
+			} catch (JSONException e) {
+				Toast.makeText(FarolaListActivity.this, "Error al recibir los datos del servidor", Toast.LENGTH_SHORT).show();
+			}
 		}
 
 		@Override
