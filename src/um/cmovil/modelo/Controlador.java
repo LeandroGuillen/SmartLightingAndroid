@@ -18,6 +18,7 @@ public class Controlador {
 	private static String key;
 	private static String server;
 	private static Map<String, Farola> farolas = new HashMap<String, Farola>();
+	private static String cookie;
 
 	public static String getServer() {
 		return server;
@@ -31,6 +32,8 @@ public class Controlador {
 		return userAgent;
 	}
 
+	// FIXME : User-Agent parece ser siempre machacado para colocar el
+	// navegador. La cabecera deber�a ser "User";
 	public static void setUserAgent(String userAgent) {
 		Controlador.userAgent = userAgent;
 	}
@@ -76,6 +79,13 @@ public class Controlador {
 			
 			addFarola(f);
 		}
+	}
+	public static void setCookie(String cookie) {
+		Controlador.cookie = cookie;
+	}
+
+	public static String getCookie() {
+		return Controlador.cookie;
 	}
 
 }

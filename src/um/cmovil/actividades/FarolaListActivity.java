@@ -1,5 +1,11 @@
 package um.cmovil.actividades;
 
+import java.io.IOException;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.ParseException;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 
 import um.cmovil.R;
@@ -57,21 +63,31 @@ public class FarolaListActivity extends Activity {
 	private class MyDownloadListener implements DownloadListener {
 
 		@Override
-		public void downloadOk(Object result) {
+		public void downloadOk(HttpResponse response) {
 			try {
+				HttpEntity httpEntity = response.getEntity();
+				String result = null;
+				result = EntityUtils.toString(httpEntity);
 
 				// Actualizar datos locales
-				Controlador.addFarolasFromJSON((String) result);
+				Controlador.addFarolasFromJSON(result);
 
 				// Mostrar mensaje por pantalla
 				Context context = (Context) FarolaListActivity.this;
 				AlertDialog.Builder dialog = new AlertDialog.Builder(context);
 				dialog.setTitle("Information");
-				dialog.setMessage((String) result);
+				dialog.setMessage(result);
 				dialog.setPositiveButton("OK", null);
 				dialog.show();
 			} catch (JSONException e) {
 				Toast.makeText(FarolaListActivity.this, "Error al recibir los datos del servidor", Toast.LENGTH_SHORT).show();
+				e.printStackTrace();
+			} catch (ParseException e) {
+				Toast.makeText(FarolaListActivity.this, "Error al recibir los datos del servidor", Toast.LENGTH_SHORT).show();
+				e.printStackTrace();
+			} catch (IOException e) {
+				Toast.makeText(FarolaListActivity.this, "Error al recibir los datos del servidor", Toast.LENGTH_SHORT).show();
+				e.printStackTrace();
 			}
 		}
 
