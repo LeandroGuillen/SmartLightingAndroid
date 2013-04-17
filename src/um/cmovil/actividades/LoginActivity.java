@@ -1,8 +1,5 @@
 package um.cmovil.actividades;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 import org.apache.http.HttpEntity;
@@ -21,7 +18,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -40,66 +36,13 @@ public class LoginActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 
-		boolean serverOk = false;
-		boolean connectionOk = true;
-		String serverNumber = "";
-
-		// Lee el servidor desde el fichero dataLogin.txt
-
-		try {
-
-			FileInputStream mInput = openFileInput("dataLogin.txt");
-
-			if (mInput.available() > 0) {
-
-				byte[] data = new byte[128];
-				mInput.read(data);
-				mInput.close();
-				serverNumber = new String(data);
-				serverOk = true;
-
-			}
-
-		} catch (FileNotFoundException e) {
-		} catch (IOException e) {
-		}
-
 		// Recover resources of the layout
 
 		user = (EditText) findViewById(R.id.UserEditText);
 		password = (EditText) findViewById(R.id.PasswordEditText);
+		server = (EditText) findViewById(R.id.ServerEditText);
 
 		// Comprobamos si se ha podido leer el servidor
-
-		if (serverOk)
-
-			server.setText(serverNumber);
-
-		else {
-
-			Toast.makeText(getApplicationContext(),
-					"No se ha podido leer el servidor desde dataLogin",
-					Toast.LENGTH_SHORT).show();
-			server = (EditText) findViewById(R.id.ServerEditText);
-			
-			
-
-			if (connectionOk && !serverOk)
-
-				// La conexion se ha establecido con exito, guarda el servidor.
-				try {
-
-					FileOutputStream mOutput = openFileOutput("dataLogin.txt",
-							Activity.MODE_PRIVATE);
-					mOutput.write(server.getText().toString().getBytes());
-					mOutput.close();
-
-				} catch (FileNotFoundException e) {
-
-				} catch (IOException e) {
-
-				}
-		}
 
 		// Retrieve or create the preferences object
 		// File defined in FormActivity.xml
@@ -168,7 +111,7 @@ public class LoginActivity extends Activity {
 			Controlador.setServer(server.getText().toString());
 			HTTPRequest httpRequest = new HTTPRequest(this, "/auth",
 					new MyDownloadListener());
-			
+
 			new HTTPAsyncTask().execute(httpRequest);
 
 		} else {
@@ -189,10 +132,8 @@ public class LoginActivity extends Activity {
 		// FIXME : Se podria indicar alguna validacion m‡s, por ejemplo la
 		// longitud del password o el formato de direccion del servidor
 
-		
-		Toast.makeText(LoginActivity.this,
-				"VALIDANDO FORMULARIO", Toast.LENGTH_SHORT)
-				.show();
+		Toast.makeText(LoginActivity.this, "VALIDANDO FORMULARIO",
+				Toast.LENGTH_SHORT).show();
 		return user.getTextSize() != 0 && password.getTextSize() != 0
 				&& server.getTextSize() != 0;
 	}
@@ -204,19 +145,19 @@ public class LoginActivity extends Activity {
 			Context context = (Context) LoginActivity.this;
 			// TODO : Coger la respuesta y extraer datos de ella
 			System.out.println("LoginActivity.MyDownloadListener.downloadOk()");
-			Toast.makeText(LoginActivity.this,
-					"Conexi—n aceptada", Toast.LENGTH_SHORT)
-					.show();
+			Toast.makeText(LoginActivity.this, "Conexi—n aceptada",
+					Toast.LENGTH_SHORT).show();
 			Controlador.setCookie(response.getHeaders("Cookie")[0].getValue());
-			
+
 			AlertDialog.Builder dialog = new AlertDialog.Builder(context);
 			dialog.setTitle("Information");
 
 			HttpEntity httpEntity = response.getEntity();
 
 			String result = null;
-			
-			// TODO : Verificar que hace falta este c—digo, es posible que valga con response.toSTring();
+
+			// TODO : Verificar que hace falta este c—digo, es posible que valga
+			// con response.toSTring();
 			try {
 				result = EntityUtils.toString(httpEntity);
 			} catch (ParseException e) {
@@ -230,14 +171,13 @@ public class LoginActivity extends Activity {
 			dialog.setMessage((String) result);
 			dialog.setPositiveButton("OK", null);
 			dialog.show();
-			
+
 			/*
-			 * 				// Get response
+			 * // Get response
 			 */
-			
-			Toast.makeText(LoginActivity.this,
-					"Respuesta http recibida", Toast.LENGTH_SHORT)
-					.show();
+
+			Toast.makeText(LoginActivity.this, "Respuesta http recibida",
+					Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
