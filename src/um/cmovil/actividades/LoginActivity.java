@@ -189,6 +189,10 @@ public class LoginActivity extends Activity {
 		// FIXME : Se podria indicar alguna validacion m‡s, por ejemplo la
 		// longitud del password o el formato de direccion del servidor
 
+		
+		Toast.makeText(LoginActivity.this,
+				"VALIDANDO FORMULARIO", Toast.LENGTH_SHORT)
+				.show();
 		return user.getTextSize() != 0 && password.getTextSize() != 0
 				&& server.getTextSize() != 0;
 	}
@@ -199,8 +203,10 @@ public class LoginActivity extends Activity {
 		public void downloadOk(HttpResponse response) {
 			Context context = (Context) LoginActivity.this;
 			// TODO : Coger la respuesta y extraer datos de ella
-			
-			
+			System.out.println("LoginActivity.MyDownloadListener.downloadOk()");
+			Toast.makeText(LoginActivity.this,
+					"Conexi—n aceptada", Toast.LENGTH_SHORT)
+					.show();
 			Controlador.setCookie(response.getHeaders("Cookie")[0].getValue());
 			
 			AlertDialog.Builder dialog = new AlertDialog.Builder(context);
