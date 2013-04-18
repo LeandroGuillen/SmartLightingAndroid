@@ -16,7 +16,7 @@ public class MainActivity extends Activity {
 
 		Controlador.setUserAgent("Jara");
 		Controlador.setKey("TestKey");
-		Controlador.setServer("192.168.1.55:8080");
+		Controlador.setServer("192.168.1.134:8080");
 
 	}
 

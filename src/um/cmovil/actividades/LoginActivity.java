@@ -41,7 +41,7 @@ public class LoginActivity extends Activity {
 		user = (EditText) findViewById(R.id.UserEditText);
 		password = (EditText) findViewById(R.id.PasswordEditText);
 		server = (EditText) findViewById(R.id.ServerEditText);
-
+		
 		// Comprobamos si se ha podido leer el servidor
 
 		// Retrieve or create the preferences object
@@ -71,6 +71,10 @@ public class LoginActivity extends Activity {
 		user.setText(formStore.getString("user", ""));
 		password.setText(formStore.getString("passwrod", ""));
 		server.setText(formStore.getString("server", ""));
+		
+		user.setText("sr4");
+		password.setText("soy el 4");
+		server.setText("192.168.1.134:8080");
 	}
 
 	@Override
@@ -101,7 +105,7 @@ public class LoginActivity extends Activity {
 	public void logIn(View v) {
 
 		// TODO : Validar el formulario
-		// Cumplir con servidor, usuario y contrase–a.
+		// Cumplir con servidor, usuario y contraseï¿½a.
 
 		if (validar()) {
 
@@ -129,7 +133,7 @@ public class LoginActivity extends Activity {
 	 */
 	private boolean validar() {
 
-		// FIXME : Se podria indicar alguna validacion m‡s, por ejemplo la
+		// FIXME : Se podria indicar alguna validacion mï¿½s, por ejemplo la
 		// longitud del password o el formato de direccion del servidor
 
 		Toast.makeText(LoginActivity.this, "VALIDANDO FORMULARIO",
@@ -142,39 +146,12 @@ public class LoginActivity extends Activity {
 
 		@Override
 		public void downloadOk(HttpResponse response) {
-			Context context = (Context) LoginActivity.this;
 			// TODO : Coger la respuesta y extraer datos de ella
 			System.out.println("LoginActivity.MyDownloadListener.downloadOk()");
-			Toast.makeText(LoginActivity.this, "Conexi—n aceptada",
+			Toast.makeText(LoginActivity.this, "Conexiï¿½n aceptada",
 					Toast.LENGTH_SHORT).show();
 			Controlador.setCookie(response.getHeaders("Cookie")[0].getValue());
 
-			AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-			dialog.setTitle("Information");
-
-			HttpEntity httpEntity = response.getEntity();
-
-			String result = null;
-
-			// TODO : Verificar que hace falta este c—digo, es posible que valga
-			// con response.toSTring();
-			try {
-				result = EntityUtils.toString(httpEntity);
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			dialog.setMessage((String) result);
-			dialog.setPositiveButton("OK", null);
-			dialog.show();
-
-			/*
-			 * // Get response
-			 */
 
 			Toast.makeText(LoginActivity.this, "Respuesta http recibida",
 					Toast.LENGTH_SHORT).show();
