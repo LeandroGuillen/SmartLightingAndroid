@@ -2,10 +2,7 @@ package um.cmovil.actividades;
 
 import java.io.IOException;
 
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.ParseException;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 
 import um.cmovil.R;
@@ -16,8 +13,6 @@ import um.cmovil.util.DownloadListener;
 import um.cmovil.util.HTTPAsyncTask;
 import um.cmovil.util.HTTPRequest;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -53,8 +48,7 @@ public class FarolaListActivity extends Activity {
 
 				Farola f = (Farola) lv.getAdapter().getItem(position);
 
-				FarolaDialog fd = new FarolaDialog(FarolaListActivity.this, f);
-				fd.show();
+				new FarolaDialog(FarolaListActivity.this, f).show();
 			}
 		});
 
@@ -65,28 +59,14 @@ public class FarolaListActivity extends Activity {
 		@Override
 		public void downloadOk(HttpResponse response) {
 			try {
-				HttpEntity httpEntity = response.getEntity();
-				String result = null;
-				result = EntityUtils.toString(httpEntity);
-
 				// Actualizar datos locales
-				Controlador.addFarolasFromJSON(result);
-
-				// Mostrar mensaje por pantalla
-				Context context = (Context) FarolaListActivity.this;
-				AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-				dialog.setTitle("Information");
-				dialog.setMessage(result);
-				dialog.setPositiveButton("OK", null);
-				dialog.show();
+				Controlador.addFarolasFromJSON(response, farolaAdapter);
+				
 			} catch (JSONException e) {
-				Toast.makeText(FarolaListActivity.this, "Error al recibir los datos del servidor", Toast.LENGTH_SHORT).show();
-				e.printStackTrace();
-			} catch (ParseException e) {
-				Toast.makeText(FarolaListActivity.this, "Error al recibir los datos del servidor", Toast.LENGTH_SHORT).show();
+				Toast.makeText(FarolaListActivity.this, "Error al formar el JSON de los datos recibidos del servidor", Toast.LENGTH_SHORT).show();
 				e.printStackTrace();
 			} catch (IOException e) {
-				Toast.makeText(FarolaListActivity.this, "Error al recibir los datos del servidor", Toast.LENGTH_SHORT).show();
+				Toast.makeText(FarolaListActivity.this, "Error de E/S al formar el JSON de los datos recibidos del servidor", Toast.LENGTH_SHORT).show();
 				e.printStackTrace();
 			}
 		}

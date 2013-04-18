@@ -18,7 +18,7 @@ public class Farola {
 		this(nombre, false, 0);
 	}
 
-	private Farola(String nombre, boolean encendida, int dim) {
+	public Farola(String nombre, boolean encendida, int dim) {
 		setEncendida(encendida);
 		setDim(dim);
 		setNombre(nombre);
@@ -45,10 +45,7 @@ public class Farola {
 	}
 
 	public void setEncendida(boolean e) {
-		if (e)
-			encender();
-		else
-			apagar();
+		encendida = e;
 	}
 
 	public Integer getDim() {
