@@ -17,12 +17,16 @@ import um.cmovil.util.HTTPAsyncTask;
 import um.cmovil.util.HTTPRequest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
+
+	SharedPreferences formStore;
+	public static final String PREFS_NAME = "MyPrefsFile";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -37,12 +41,18 @@ public class MainActivity extends Activity {
 		tvServer.setText(Controlador.getServer());
 
 		obtenerDatosTiempo();
+
+		// File defined in PREFS_NAME
+		formStore = getSharedPreferences(PREFS_NAME, 0);
+
+		Toast.makeText(MainActivity.this, formStore.getString("Cookie", ""), Toast.LENGTH_LONG).show();
 	}
 
 	public void obtenerDatosTiempo() {
 		// Cargar datos del tiempo
 		HTTPRequest statusRequest = new HTTPRequest(this, "/resources/weather", new TiempoDownloadListener());
 		new HTTPAsyncTask().execute(statusRequest);
+
 	}
 
 	public void verListaFarolas(View view) {

@@ -1,11 +1,6 @@
 package um.cmovil.actividades;
 
-import java.io.IOException;
-
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.ParseException;
-import org.apache.http.util.EntityUtils;
 
 import um.cmovil.R;
 import um.cmovil.modelo.Controlador;
@@ -13,8 +8,8 @@ import um.cmovil.util.DownloadListener;
 import um.cmovil.util.HTTPAsyncTask;
 import um.cmovil.util.HTTPRequest;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -41,7 +36,7 @@ public class LoginActivity extends Activity {
 		user = (EditText) findViewById(R.id.UserEditText);
 		password = (EditText) findViewById(R.id.PasswordEditText);
 		server = (EditText) findViewById(R.id.ServerEditText);
-		
+
 		// Comprobamos si se ha podido leer el servidor
 
 		// Retrieve or create the preferences object
@@ -71,10 +66,10 @@ public class LoginActivity extends Activity {
 		user.setText(formStore.getString("user", ""));
 		password.setText(formStore.getString("passwrod", ""));
 		server.setText(formStore.getString("server", ""));
-		
+
 		user.setText("sr4");
 		password.setText("soy el 4");
-		server.setText("192.168.1.134:8080");
+		server.setText("192.168.1.11:8080");
 	}
 
 	@Override
@@ -151,10 +146,13 @@ public class LoginActivity extends Activity {
 			Toast.makeText(LoginActivity.this, "Conexi�n aceptada",
 					Toast.LENGTH_SHORT).show();
 			Controlador.setCookie(response.getHeaders("Cookie")[0].getValue());
-
-
-			Toast.makeText(LoginActivity.this, "Respuesta http recibida",
-					Toast.LENGTH_SHORT).show();
+			// TODO : Almacenar cookie en shared
+			SharedPreferences.Editor editor = formStore.edit();
+			editor.putString("Cookie",
+					response.getHeaders("Cookie")[0].getValue());
+			editor.commit();
+			goToMainActivity(null);
+			finish();
 		}
 
 		@Override
@@ -163,5 +161,10 @@ public class LoginActivity extends Activity {
 					"No se pudo realizar la conexión", Toast.LENGTH_SHORT)
 					.show();
 		}
+	}
+
+	public void goToMainActivity(View view) {
+		Intent intent = new Intent(this, MainActivity.class);
+		startActivity(intent);
 	}
 }
