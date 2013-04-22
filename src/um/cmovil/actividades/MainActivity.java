@@ -33,24 +33,26 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-//		Controlador.setUserAgent("Jara");
-//		Controlador.setKey("TestKey");
-//		Controlador.setServer("192.168.1.11:8080");
+		formStore = getSharedPreferences(PREFS_NAME, 0);
+		// Controlador.setUserAgent("Jara");
+		// Controlador.setKey("TestKey");
+		// Controlador.setServer("155.54.58.229:8080");
 
+		Controlador.setServer(formStore.getString("server", ""));
 		TextView tvServer = (TextView) findViewById(R.id.maServidor);
 		tvServer.setText(Controlador.getServer());
 
 		obtenerDatosTiempo();
 
-		// File defined in PREFS_NAME
-		formStore = getSharedPreferences(PREFS_NAME, 0);
+		Toast.makeText(MainActivity.this, formStore.getString("Cookie", ""),
+				Toast.LENGTH_LONG).show();
 
-		Toast.makeText(MainActivity.this, formStore.getString("Cookie", ""), Toast.LENGTH_LONG).show();
 	}
 
 	public void obtenerDatosTiempo() {
 		// Cargar datos del tiempo
-		HTTPRequest statusRequest = new HTTPRequest(this, "/resources/weather", new TiempoDownloadListener());
+		HTTPRequest statusRequest = new HTTPRequest(this, "/resources/weather",
+				new TiempoDownloadListener());
 		new HTTPAsyncTask().execute(statusRequest);
 
 	}
@@ -60,11 +62,14 @@ public class MainActivity extends Activity {
 		// servidor. Solo actualizar si realmente se necesita. El controlador
 		// implementa un temporizador actualmente.
 		if (ControladorFarolas.necesitoActualizar()) {
-			HTTPRequest statusRequest = new HTTPRequest(this, "/resources/streetlight/testlist", new FarolasDownloadListener());
+			HTTPRequest statusRequest = new HTTPRequest(this,
+					"/resources/streetlight/testlist",
+					new FarolasDownloadListener());
 			new HTTPAsyncTask().execute(statusRequest);
 		} else {
 			// Lanzar la actividad nueva
-			Intent intent = new Intent(MainActivity.this, FarolaListActivity.class);
+			Intent intent = new Intent(MainActivity.this,
+					FarolaListActivity.class);
 			startActivity(intent);
 		}
 	}
@@ -78,21 +83,30 @@ public class MainActivity extends Activity {
 				ControladorFarolas.addFarolasFromJSON(response);
 
 				// Lanzar la actividad nueva
-				Intent intent = new Intent(MainActivity.this, FarolaListActivity.class);
+				Intent intent = new Intent(MainActivity.this,
+						FarolaListActivity.class);
 				startActivity(intent);
 
 			} catch (JSONException e) {
-				Toast.makeText(MainActivity.this, "Error al formar el JSON de los datos recibidos del servidor", Toast.LENGTH_SHORT).show();
+				Toast.makeText(
+						MainActivity.this,
+						"Error al formar el JSON de los datos recibidos del servidor",
+						Toast.LENGTH_SHORT).show();
 				e.printStackTrace();
 			} catch (IOException e) {
-				Toast.makeText(MainActivity.this, "Error de E/S al formar el JSON de los datos recibidos del servidor", Toast.LENGTH_SHORT).show();
+				Toast.makeText(
+						MainActivity.this,
+						"Error de E/S al formar el JSON de los datos recibidos del servidor",
+						Toast.LENGTH_SHORT).show();
 				e.printStackTrace();
 			}
 		}
 
 		@Override
 		public void downloadFailed() {
-			Toast.makeText(MainActivity.this, "No se pudo realizar la conexión", Toast.LENGTH_SHORT).show();
+			Toast.makeText(MainActivity.this,
+					"No se pudo realizar la conexión", Toast.LENGTH_SHORT)
+					.show();
 		}
 	}
 
@@ -138,29 +152,35 @@ public class MainActivity extends Activity {
 				mensaje = "Error al recibir los datos sobre el tiempo: formato de fecha mal formado";
 				e.printStackTrace();
 			} finally {
-				Toast.makeText(MainActivity.this, mensaje, Toast.LENGTH_LONG).show();
+				Toast.makeText(MainActivity.this, mensaje, Toast.LENGTH_LONG)
+						.show();
 			}
 		}
 
 		@Override
 		public void downloadFailed() {
-			Toast.makeText(MainActivity.this, "No se pudo realizar la conexión", Toast.LENGTH_SHORT).show();
+			Toast.makeText(MainActivity.this,
+					"No se pudo realizar la conexión", Toast.LENGTH_SHORT)
+					.show();
 		}
 	}
-	
 
 	public void verMapa(View view) {
 		// Cuando quieres ver la lista de farolas es cuando se descargan del
 		// servidor. Solo actualizar si realmente se necesita. El controlador
 		// implementa un temporizador actualmente.
+
+	
+
 		if (ControladorFarolas.necesitoActualizar()) {
-			HTTPRequest statusRequest = new HTTPRequest(this, "/resources/streetlight/testlist", new FarolasDownloadListener());
+			HTTPRequest statusRequest = new HTTPRequest(this,
+					"/resources/streetlight/testlist",
+					new FarolasDownloadListener());
 			new HTTPAsyncTask().execute(statusRequest);
-		} else {
-			// Lanzar la actividad nueva
-			Intent intent = new Intent(this, MapViewActivity.class);
-			startActivity(intent);
-		}
+		} // Lanzar la actividad nueva
+		Intent intent = new Intent(MainActivity.this, MapViewActivity.class);
+		startActivity(intent);
+
 	}
 
 }

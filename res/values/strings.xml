@@ -9,5 +9,6 @@
     <string name="title_activity_farola_list">FarolaListActivity</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_map">MapActivity</string>
+    <string name="title_activity_launcher">LauncherActivity</string>
 
 </resources>
