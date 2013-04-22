@@ -1,21 +1,16 @@
 package um.cmovil.actividades;
 
-import java.util.ArrayList;
-
 import um.cmovil.R;
-import um.cmovil.util.LocationOverlay;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
@@ -29,30 +24,18 @@ public class MapViewActivity extends MapActivity {
 	String selectedProvider;
 
 	TextView locationView;
-
 	MapView map;
 	MapController controller;
-	
-	
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_map);
+		manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
 		map = (MapView) findViewById(R.id.map);
 		controller = map.getController();
-		map.setSatellite(true);
 
-		
-		// TODO : ÀItemizedOverlay y map en la misma clase?
-		
-		ArrayList<GeoPoint> locations = new ArrayList<GeoPoint>();
-		ArrayList<Drawable> images = new ArrayList<Drawable>();
-		
-		LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		LocationOverlay myOverlay = new LocationOverlay(this, getResources().getDrawable(R.drawable.ic_launcher));
-		
 		if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 			// Ask the user to enable GPS
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -80,42 +63,32 @@ public class MapViewActivity extends MapActivity {
 			builder.create().show();
 		}
 
-		// Get a cached location, if it exists
-		currentLocation = manager
+		LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		Location location = manager
 				.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
+		int lat, lng;
+		if (location != null) {
+			// Convert to microdegrees
+			lat = (int) (location.getLatitude() * 1000000);
+			lng = (int) (location.getLongitude() * 1000000);
+		} else {
+			// Default to Google HQ
+			lat = 37427222;
+			lng = -122099167;
+		}
 		// Register for updates
-		int minTime = 10;
+		int minTime = 100;
 		float minDistance = 0;
 		manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, minTime,
 				minDistance, listener);
-
-		int lat, lng;
-		if (currentLocation != null) {
-			// Convert to microdegrees
-			lat = (int) (currentLocation.getLatitude() * 1000000);
-			lng = (int) (currentLocation.getLongitude() * 1000000);
-
-			Toast.makeText(getApplicationContext(),
-					("lat: " + lat + "    " + "long: " + lng),
-					Toast.LENGTH_LONG).show();
-		} else {
-			// Default to Google HQ
-			lat = 38024076;
-			lng = -1173600;
-		
-		}
-		
-		myOverlay.setItems(locations, images);
-		map.getOverlays().add(myOverlay);
 		GeoPoint mapCenter = new GeoPoint(lat, lng);
-		//Dejamos el centro de la localizacion del GPS
 		controller.setCenter(mapCenter);
-		controller.setZoom(30);
+		controller.setZoom(15);
+
 	}
 
 	// Required abstract method, return false
-
+	@Override
 	protected boolean isRouteDisplayed() {
 		return false;
 	}
@@ -125,6 +98,21 @@ public class MapViewActivity extends MapActivity {
 		@Override
 		public void onLocationChanged(Location location) {
 			currentLocation = location;
+			updateMap();
+		}
+
+		private void updateMap() {
+			if (currentLocation == null) {
+				locationView.setText("Determining Your Location...");
+			} else {
+				GeoPoint mapCenter = new GeoPoint(
+						(int) currentLocation.getLatitude() * 10000,
+						(int) currentLocation.getLongitude() * 1000);
+
+				controller.setCenter(mapCenter);
+				controller.setZoom(15);
+
+			}
 		}
 
 		@Override

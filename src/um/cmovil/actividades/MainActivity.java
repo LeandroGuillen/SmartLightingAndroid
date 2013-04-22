@@ -38,17 +38,16 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		// Controlador.setUserAgent("Jara");
-		// Controlador.setKey("TestKey");
-		// Controlador.setServer("192.168.1.11:8080");
+		formStore = getSharedPreferences(PREFS_NAME, 0);
 
+		Controlador.setServer(formStore.getString("server", ""));
 		TextView tvServer = (TextView) findViewById(R.id.maServidor);
 		tvServer.setText(Controlador.getServer());
 
 		obtenerDatosTiempo();
 
-		// File defined in PREFS_NAME
-		formStore = getSharedPreferences(PREFS_NAME, 0);
+		Toast.makeText(MainActivity.this, formStore.getString("Cookie", ""),
+				Toast.LENGTH_LONG).show();
 
 		Toast.makeText(MainActivity.this, formStore.getString("Cookie", ""), Toast.LENGTH_LONG).show();
 
@@ -57,7 +56,8 @@ public class MainActivity extends Activity {
 
 	public void obtenerDatosTiempo() {
 		// Cargar datos del tiempo
-		HTTPRequest statusRequest = new HTTPRequest(this, "/resources/weather", new TiempoDownloadListener());
+		HTTPRequest statusRequest = new HTTPRequest(this, "/resources/weather",
+				new TiempoDownloadListener());
 		new HTTPAsyncTask().execute(statusRequest);
 
 	}
@@ -72,7 +72,8 @@ public class MainActivity extends Activity {
 			new HTTPAsyncTask().execute(statusRequest);
 		} else {
 			// Lanzar la actividad nueva
-			Intent intent = new Intent(MainActivity.this, FarolaListActivity.class);
+			Intent intent = new Intent(MainActivity.this,
+					FarolaListActivity.class);
 			startActivity(intent);
 		}
 	}
@@ -110,17 +111,25 @@ public class MainActivity extends Activity {
 				}
 
 			} catch (JSONException e) {
-				Toast.makeText(MainActivity.this, "Error al formar el JSON de los datos recibidos del servidor", Toast.LENGTH_SHORT).show();
+				Toast.makeText(
+						MainActivity.this,
+						"Error al formar el JSON de los datos recibidos del servidor",
+						Toast.LENGTH_SHORT).show();
 				e.printStackTrace();
 			} catch (IOException e) {
-				Toast.makeText(MainActivity.this, "Error de E/S al formar el JSON de los datos recibidos del servidor", Toast.LENGTH_SHORT).show();
+				Toast.makeText(
+						MainActivity.this,
+						"Error de E/S al formar el JSON de los datos recibidos del servidor",
+						Toast.LENGTH_SHORT).show();
 				e.printStackTrace();
 			}
 		}
 
 		@Override
 		public void downloadFailed() {
-			Toast.makeText(MainActivity.this, "No se pudo realizar la conexión", Toast.LENGTH_SHORT).show();
+			Toast.makeText(MainActivity.this,
+					"No se pudo realizar la conexión", Toast.LENGTH_SHORT)
+					.show();
 		}
 	}
 
@@ -166,13 +175,16 @@ public class MainActivity extends Activity {
 				mensaje = "Error al recibir los datos sobre el tiempo: formato de fecha mal formado";
 				e.printStackTrace();
 			} finally {
-				Toast.makeText(MainActivity.this, mensaje, Toast.LENGTH_LONG).show();
+				Toast.makeText(MainActivity.this, mensaje, Toast.LENGTH_LONG)
+						.show();
 			}
 		}
 
 		@Override
 		public void downloadFailed() {
-			Toast.makeText(MainActivity.this, "No se pudo realizar la conexión", Toast.LENGTH_SHORT).show();
+			Toast.makeText(MainActivity.this,
+					"No se pudo realizar la conexión", Toast.LENGTH_SHORT)
+					.show();
 		}
 	}
 
