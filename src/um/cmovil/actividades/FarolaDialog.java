@@ -8,17 +8,25 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.SeekBar;
-import android.widget.Toast;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 public class FarolaDialog extends AlertDialog implements OnClickListener {
 	Farola farola;
+	ToggleButton toggleButton;
+	SeekBar seekBar;
+	TextView name;
+	TextView dim;
+	ImageView bombilla;
+	Button bOk;
+	Button bCancel;
 
 	protected FarolaDialog(Context context, Farola f) {
 		super(context);
@@ -32,34 +40,27 @@ public class FarolaDialog extends AlertDialog implements OnClickListener {
 		getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.WHITE));
 
 		// Actualizar con los valores de la farola
-		TextView name = (TextView) findViewById(R.id.dfName);
-		name.setText(farola.getNombre());
+		name = (TextView) findViewById(R.id.dfName);
 
-		final TextView dim = (TextView) findViewById(R.id.dfDim);
-		dim.setText(farola.getDim().toString());
+		dim = (TextView) findViewById(R.id.dfDim);
 
-		final ImageView bombilla = (ImageView) findViewById(R.id.dfBombilla);
-		if (farola.isEncendida())
-			bombilla.setImageResource(R.drawable.bombilla_on);
-		else
-			bombilla.setImageResource(R.drawable.bombilla_off);
+		bombilla = (ImageView) findViewById(R.id.dfBombilla);
 
-		final ToggleButton tb = (ToggleButton) findViewById(R.id.dfToggle);
-		final SeekBar sb = (SeekBar) findViewById(R.id.dfSeekBar);
+		toggleButton = (ToggleButton) findViewById(R.id.dfToggle);
 
-		sb.setMax(100);
-		sb.setProgress(farola.getDim());
-		sb.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+		seekBar = (SeekBar) findViewById(R.id.dfSeekBar);
+		seekBar.setMax(100);
+		seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 
 			private int progressAlmacenado;
 
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 				if (progress == 0) {
-					tb.setChecked(false);
+					toggleButton.setChecked(false);
 					bombilla.setImageResource(R.drawable.bombilla_off);
 				} else if (!farola.isEncendida() && progress > 0) {
-					tb.setChecked(true);
+					toggleButton.setChecked(true);
 					bombilla.setImageResource(R.drawable.bombilla_on);
 				}
 				dim.setText(Integer.toString(progress));
@@ -77,37 +78,47 @@ public class FarolaDialog extends AlertDialog implements OnClickListener {
 			}
 		});
 
-		tb.setChecked(farola.isEncendida());
-		tb.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		toggleButton.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				if (isChecked) {
 					farola.encender();
-					sb.setProgress(10);
+					seekBar.setProgress(10);
 					bombilla.setImageResource(R.drawable.bombilla_on);
 				} else {
 					farola.apagar();
-					sb.setProgress(0);
+					seekBar.setProgress(0);
 					bombilla.setImageResource(R.drawable.bombilla_off);
 				}
 			}
 		});
 
-		setButton(BUTTON_POSITIVE, "OK", this);
-		setButton(BUTTON_NEGATIVE, "Cancelar", this);
+	}
+
+	public void onStart() {
+		seekBar.setProgress(farola.getDim());
+		toggleButton.setChecked(farola.isEncendida());
+
+		if (farola.isEncendida())
+			bombilla.setImageResource(R.drawable.bombilla_on);
+		else
+			bombilla.setImageResource(R.drawable.bombilla_off);
+
+		dim.setText(farola.getDim().toString());
+
+		name.setText(farola.getNombre());
 	}
 
 	@Override
 	public void onClick(DialogInterface dialog, int which) {
 		if (which == BUTTON_POSITIVE) {
 			// Guardar el estado en el servidor
-			Toast.makeText(this.getContext(), "Guardar el estado en el servidor", Toast.LENGTH_SHORT).show();
-			dismiss();
-		}
-		else {
+			Toast.makeText(this.getContext(), "Se han guardado los cambios", Toast.LENGTH_SHORT).show();
+		} else {
 			// Cancelar el cambio
-			dismiss();
+			Toast.makeText(this.getContext(), "No se han guardado los cambios", Toast.LENGTH_SHORT).show();
 		}
 	}
+
 }
