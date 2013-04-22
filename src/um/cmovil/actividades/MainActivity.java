@@ -57,9 +57,16 @@ public class MainActivity extends Activity {
 
 	public void verListaFarolas(View view) {
 		// Cuando quieres ver la lista de farolas es cuando se descargan del
-		// servidor
-		HTTPRequest statusRequest = new HTTPRequest(this, "/resources/streetlight/testlist", new FarolasDownloadListener());
-		new HTTPAsyncTask().execute(statusRequest);
+		// servidor. Solo actualizar si realmente se necesita. El controlador
+		// implementa un temporizador actualmente.
+		if (ControladorFarolas.necesitoActualizar()) {
+			HTTPRequest statusRequest = new HTTPRequest(this, "/resources/streetlight/testlist", new FarolasDownloadListener());
+			new HTTPAsyncTask().execute(statusRequest);
+		} else {
+			// Lanzar la actividad nueva
+			Intent intent = new Intent(MainActivity.this, FarolaListActivity.class);
+			startActivity(intent);
+		}
 	}
 
 	private class FarolasDownloadListener implements DownloadListener {

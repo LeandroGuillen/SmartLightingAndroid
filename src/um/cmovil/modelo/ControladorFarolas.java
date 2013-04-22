@@ -3,6 +3,7 @@ package um.cmovil.modelo;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,6 +21,8 @@ import com.google.android.maps.GeoPoint;
 
 public class ControladorFarolas {
 	private static Map<String, Farola> farolas = new HashMap<String, Farola>();
+	private static Date ultimaActualizacion;
+	private static int TIEMPO_ACTUALIZACION = 10; // en segundos
 
 	public static void addFarola(Farola f) {
 		farolas.put(f.getNombre(), f);
@@ -36,6 +39,7 @@ public class ControladorFarolas {
 	}
 
 	public static void addFarolasFromJSON(HttpResponse response) throws JSONException, IOException {
+
 		BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
 		StringBuilder builder = new StringBuilder();
 		for (String line = null; (line = reader.readLine()) != null;) {
@@ -43,8 +47,6 @@ public class ControladorFarolas {
 		}
 		JSONTokener tokener = new JSONTokener(builder.toString());
 		JSONArray lista = new JSONArray(tokener);
-
-		// adapter.clear();
 
 		for (int i = 0; i < lista.length(); i++) {
 			JSONObject json = lista.getJSONObject(i);
@@ -59,9 +61,18 @@ public class ControladorFarolas {
 			f.setGeoPoint(new GeoPoint(lat, lon));
 
 			addFarola(f);
-			// adapter.add(f);
 		}
 
-		// adapter.notifyDataSetChanged();
+		ultimaActualizacion = new Date();
+	}
+
+	public static boolean necesitoActualizar() {
+		// Si ha pasado suficiente tiempo volvemos a cargarlo
+		if (ultimaActualizacion != null) {
+			long diff = new Date().getTime() - ultimaActualizacion.getTime();
+			return diff > TIEMPO_ACTUALIZACION * 1000;
+		} else {
+			return true;
+		}
 	}
 }
