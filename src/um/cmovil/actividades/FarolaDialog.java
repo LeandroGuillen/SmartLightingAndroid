@@ -2,12 +2,14 @@ package um.cmovil.actividades;
 
 import um.cmovil.R;
 import um.cmovil.modelo.recursos.Farola;
-import android.app.AlertDialog;
+import um.cmovil.util.DownloadListener;
+import um.cmovil.util.HTTPAsyncTask;
+import um.cmovil.util.HTTPRequest;
+import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -15,11 +17,12 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
-public class FarolaDialog extends AlertDialog implements OnClickListener {
+public class FarolaDialog extends Dialog {
 	Farola farola;
+	DownloadListener listener;
+
 	ToggleButton toggleButton;
 	SeekBar seekBar;
 	TextView name;
@@ -28,9 +31,10 @@ public class FarolaDialog extends AlertDialog implements OnClickListener {
 	Button bOk;
 	Button bCancel;
 
-	protected FarolaDialog(Context context, Farola f) {
+	protected FarolaDialog(Context context, Farola f, DownloadListener listener) {
 		super(context);
 		this.farola = f;
+		this.listener = listener;
 	}
 
 	@Override
@@ -56,14 +60,6 @@ public class FarolaDialog extends AlertDialog implements OnClickListener {
 
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-				if (progress == 0) {
-					toggleButton.setChecked(false);
-					bombilla.setImageResource(R.drawable.bombilla_off);
-				} else if (!farola.isEncendida() && progress > 0) {
-					toggleButton.setChecked(true);
-					bombilla.setImageResource(R.drawable.bombilla_on);
-				}
-				dim.setText(Integer.toString(progress));
 				progressAlmacenado = progress;
 			}
 
@@ -74,7 +70,14 @@ public class FarolaDialog extends AlertDialog implements OnClickListener {
 
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
-				farola.setDim(progressAlmacenado);
+				if (progressAlmacenado == 0) {
+					toggleButton.setChecked(false);
+					bombilla.setImageResource(R.drawable.bombilla_off);
+				} else if (!farola.isEncendida() && progressAlmacenado > 0) {
+					toggleButton.setChecked(true);
+					bombilla.setImageResource(R.drawable.bombilla_on);
+				}
+				dim.setText(Integer.toString(progressAlmacenado));
 			}
 		});
 
@@ -84,16 +87,57 @@ public class FarolaDialog extends AlertDialog implements OnClickListener {
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				if (isChecked) {
 					farola.encender();
-					seekBar.setProgress(10);
+//					seekBar.setProgress(100);
 					bombilla.setImageResource(R.drawable.bombilla_on);
+					if(seekBar.getProgress()==0){
+						dim.setText(Integer.toString(100));
+						seekBar.setProgress(100);
+					}
+					else
+						dim.setText(Integer.toString(seekBar.getProgress()));
 				} else {
 					farola.apagar();
 					seekBar.setProgress(0);
 					bombilla.setImageResource(R.drawable.bombilla_off);
+					dim.setText(Integer.toString(0));
 				}
 			}
 		});
 
+		Button bOk = (Button) findViewById(R.id.bOk);
+		Button bCa = (Button) findViewById(R.id.bCancelar);
+
+		bOk.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// Actualizar la farola localmente
+				Farola f = FarolaDialog.this.farola;
+				f.setDim(seekBar.getProgress());
+				f.setEncendida(toggleButton.isChecked());
+
+				// Preparar datos para actualizar el servidor
+				String comando = "/resources/streetlight";
+				comando += "?farola=" + f.getNombre();
+				comando += "&encendida=" + f.isEncendida();
+				comando += "&dim=" + f.getDim();
+
+				// Enviar peticion de actualizacion
+				HTTPRequest request = new HTTPRequest(FarolaDialog.this.getContext(), comando, listener);
+				new HTTPAsyncTask().execute(request);
+				// Cerrar el dialogo
+				FarolaDialog.this.dismiss();
+			}
+		});
+
+		bCa.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// No hay que guardar los cambios
+				FarolaDialog.this.cancel();
+			}
+		});
 	}
 
 	public void onStart() {
@@ -108,17 +152,6 @@ public class FarolaDialog extends AlertDialog implements OnClickListener {
 		dim.setText(farola.getDim().toString());
 
 		name.setText(farola.getNombre());
-	}
-
-	@Override
-	public void onClick(DialogInterface dialog, int which) {
-		if (which == BUTTON_POSITIVE) {
-			// Guardar el estado en el servidor
-			Toast.makeText(this.getContext(), "Se han guardado los cambios", Toast.LENGTH_SHORT).show();
-		} else {
-			// Cancelar el cambio
-			Toast.makeText(this.getContext(), "No se han guardado los cambios", Toast.LENGTH_SHORT).show();
-		}
 	}
 
 }

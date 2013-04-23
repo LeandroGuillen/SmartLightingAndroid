@@ -1,17 +1,26 @@
 package um.cmovil.actividades;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+import org.apache.http.HttpResponse;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
 import um.cmovil.R;
 import um.cmovil.actividades.adaptadores.FarolaAdapter;
 import um.cmovil.modelo.ControladorFarolas;
 import um.cmovil.modelo.recursos.Farola;
+import um.cmovil.util.DownloadListener;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class FarolaListActivity extends Activity {
 	FarolaAdapter farolaAdapter;
@@ -37,42 +46,46 @@ public class FarolaListActivity extends Activity {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
 				Farola f = (Farola) lv.getAdapter().getItem(position);
-
-				 new FarolaDialog(FarolaListActivity.this, f).show();
-//				View v = getLayoutInflater().inflate(R.layout.dialog_farola, null);
-//				AlertDialog.Builder adb = new AlertDialog.Builder(FarolaListActivity.this);
-//
-//				// set title
-//				adb.setTitle("Cambiar farola");
-//				adb.setView(v);
-//
-//				// set dialog message
-//				adb.setCancelable(false).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-//					public void onClick(DialogInterface dialog, int id) {
-//						// if this button is clicked, close
-//						// current activity
-//						
-//					}
-//				}).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-//					public void onClick(DialogInterface dialog, int id) {
-//						// if this button is clicked, just close
-//						// the dialog box and do nothing
-//						dialog.cancel();
-//					}
-//				});
-//				
-//				// create alert dialog
-//				AlertDialog alertDialog = adb.create();
-//
-//				// show it
-//				alertDialog.show();
-//				
-//				farolaAdapter.notifyDataSetChanged();
+				new FarolaDialog(FarolaListActivity.this, f, new FarolaUpdateListener()).show();
 			}
 		});
 
-		
-
 	}
 
+	private class FarolaUpdateListener implements DownloadListener {
+
+		@Override
+		public void downloadOk(HttpResponse response) {
+			// Actualizar la UI del cliente
+			farolaAdapter.notifyDataSetChanged();
+			try {
+				// Interpretar la respuesta
+				BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
+				StringBuilder builder = new StringBuilder();
+
+				for (String line = null; (line = reader.readLine()) != null;) {
+					builder.append(line).append("\n");
+				}
+
+				JSONTokener tokener = new JSONTokener(builder.toString());
+				JSONObject json = new JSONObject(tokener);
+
+				// Muestra en la pantalla la respuesta del servidor
+				Toast.makeText(FarolaListActivity.this, json.getString("status"), Toast.LENGTH_SHORT).show();
+
+			} catch (IOException e) {
+				Toast.makeText(FarolaListActivity.this, "Error de E/S", Toast.LENGTH_SHORT).show();
+				e.printStackTrace();
+			} catch (JSONException e) {
+				Toast.makeText(FarolaListActivity.this, "Error al decodificar la respuesta JSON", Toast.LENGTH_SHORT).show();
+				e.printStackTrace();
+			}
+
+		}
+
+		@Override
+		public void downloadFailed() {
+			Toast.makeText(FarolaListActivity.this, "No se pudo guardar la farola", Toast.LENGTH_SHORT).show();
+		}
+	}
 }

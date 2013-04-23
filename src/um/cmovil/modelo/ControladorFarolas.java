@@ -22,7 +22,7 @@ import com.google.android.maps.GeoPoint;
 public class ControladorFarolas {
 	private static Map<String, Farola> farolas = new HashMap<String, Farola>();
 	private static Date ultimaActualizacion;
-	private static int TIEMPO_ACTUALIZACION = 10; // en segundos
+	private static int TIEMPO_ACTUALIZACION = 60; // en segundos
 
 	public static void addFarola(Farola f) {
 		farolas.put(f.getNombre(), f);

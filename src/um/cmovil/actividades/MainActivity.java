@@ -68,8 +68,8 @@ public class MainActivity extends Activity {
 		// implementa un temporizador actualmente.
 		if (ControladorFarolas.necesitoActualizar()) {
 			listaFarolasIntentRunning = true;
-			HTTPRequest statusRequest = new HTTPRequest(this, "/resources/streetlight/testlist", new FarolasDownloadListener());
-			new HTTPAsyncTask().execute(statusRequest);
+			HTTPRequest request = new HTTPRequest(this, "/resources/streetlight/testlist", new FarolasDownloadListener());
+			new HTTPAsyncTask().execute(request);
 		} else {
 			// Lanzar la actividad nueva
 			Intent intent = new Intent(MainActivity.this,
@@ -83,8 +83,8 @@ public class MainActivity extends Activity {
 		// servidor. Solo actualizar si realmente se necesita. El controlador
 		// implementa un temporizador actualmente.
 		if (ControladorFarolas.necesitoActualizar()) {
-			HTTPRequest statusRequest = new HTTPRequest(this, "/resources/streetlight/testlist", new FarolasDownloadListener());
-			new HTTPAsyncTask().execute(statusRequest);
+			HTTPRequest request = new HTTPRequest(this, "/resources/streetlight/testlist", new FarolasDownloadListener());
+			new HTTPAsyncTask().execute(request);
 		} else {
 			// Lanzar la actividad nueva
 			Intent intent = new Intent(this, MapViewActivity.class);
