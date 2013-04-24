@@ -37,16 +37,17 @@
         <activity
             android:name="um.cmovil.actividades.MapViewActivity"
             android:label="@string/title_activity_map" >
-        </activity>
-        <activity
-            android:name="um.cmovil.actividades.LauncherActivity"
-            android:label="@string/title_activity_launcher"
-            android:noHistory="true" >
+            
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="um.cmovil.actividades.LauncherActivity"
+            android:label="@string/title_activity_launcher"
+            android:noHistory="true" >
         </activity>
     </application>
 
