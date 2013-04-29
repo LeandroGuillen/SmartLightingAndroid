@@ -32,6 +32,7 @@ public class MainActivity extends Activity {
 	 * Falso - Estamos leyendo farolas por cualquier otro motivo
 	 */
 	private boolean listaFarolasIntentRunning;
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +69,7 @@ public class MainActivity extends Activity {
 		// implementa un temporizador actualmente.
 		if (ControladorFarolas.necesitoActualizar()) {
 			listaFarolasIntentRunning = true;
-			HTTPRequest request = new HTTPRequest(this, "/resources/streetlight/testlist", new FarolasDownloadListener());
+			HTTPRequest request = new HTTPRequest(this, "/resources/streetlight/list", new FarolasDownloadListener());
 			new HTTPAsyncTask().execute(request);
 		} else {
 			// Lanzar la actividad nueva
@@ -83,7 +84,7 @@ public class MainActivity extends Activity {
 		// servidor. Solo actualizar si realmente se necesita. El controlador
 		// implementa un temporizador actualmente.
 		if (ControladorFarolas.necesitoActualizar()) {
-			HTTPRequest request = new HTTPRequest(this, "/resources/streetlight/testlist", new FarolasDownloadListener());
+			HTTPRequest request = new HTTPRequest(this, "/resources/streetlight/list", new FarolasDownloadListener());
 			new HTTPAsyncTask().execute(request);
 		} else {
 			// Lanzar la actividad nueva
@@ -108,6 +109,13 @@ public class MainActivity extends Activity {
 					startActivity(intent);
 
 					listaFarolasIntentRunning = false;
+				}else{
+					Intent intent = new Intent(MainActivity.this, MapViewActivity.class);
+					startActivity(intent);
+
+					listaFarolasIntentRunning = false;
+					
+					
 				}
 
 			} catch (JSONException e) {

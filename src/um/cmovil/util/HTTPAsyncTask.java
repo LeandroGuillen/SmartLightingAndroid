@@ -25,24 +25,43 @@ public class HTTPAsyncTask extends AsyncTask<HTTPRequest, String, HttpResponse> 
 		String URL = httpreq.getURL();
 		String userAgent = Controlador.getUserAgent();
 		String key = Controlador.getKey();
+		
 		HttpResponse response = null;
 
 		if (Utils.isNetworkOk(appContext)) {
 			try {
+			
+
 				String time = Utils
 						.getCurrentDateAsStringInRFC1123Format(Utils.GMT_TIMEZONE);
 
+				
 				HttpGet get = new HttpGet(URL);
 				get.addHeader("Accept", "application/json");
 				get.addHeader("User-Agent", userAgent);
 				get.addHeader(HTTP.DATE_HEADER, time);
-				get.addHeader("apiKey", Utils.md5(Utils.md5(key) + time));
 				get.addHeader("Content-Length", "0");
 
+				if (!Controlador.getCookie().isEmpty()) {
+					
+					get.addHeader("Cookie", Controlador.getCookie());
+				
+
+				
+				}else{
+				
+					get.addHeader("apiKey", Utils.md5(Utils.md5(key) + time));
+
+				}
+
+				
+				
+				
+				
+				
 				HttpClient client = new DefaultHttpClient();
 				response = client.execute(get);
-
-
+				
 			} catch (ClientProtocolException e) {
 				e.printStackTrace();
 			} catch (IOException e) {

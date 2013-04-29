@@ -5,7 +5,6 @@ import java.util.List;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
@@ -30,7 +29,7 @@ public class LocationOverlay extends ItemizedOverlay<OverlayItem> {
 
 	protected OverlayItem createItem(int i) {
 		OverlayItem item = new OverlayItem(mItems.get(i), null, null);
-		item.setMarker(boundCenterBottom(mMarkers.get(i)));
+		item.setMarker(boundCenterBottom(mMarkers.get(0)));
 		return item;
 	}
 
@@ -39,7 +38,8 @@ public class LocationOverlay extends ItemizedOverlay<OverlayItem> {
 	}
 
 	protected boolean onTap(int i) {
-		Toast.makeText(mContext, "Tapped " + i, Toast.LENGTH_SHORT).show();
+		
+		//new FarolaDialog(this,)
 		return true;
 	}
 }

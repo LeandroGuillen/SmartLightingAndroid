@@ -7,7 +7,7 @@ public class Controlador {
 	private static String server;
 	
 
-	private static String cookie;
+	private static String cookie ="";
 
 	public static String getServer() {
 		return server;
