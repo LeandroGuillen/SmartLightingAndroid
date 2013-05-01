@@ -57,6 +57,8 @@ public class LocationOverlay extends ItemizedOverlay<OverlayItem> {
 
 		new FarolaDialog(mContext, new Farola(),
 				new FarolaUpdateListener()).show();
+		
+		
 		return true;
 	}
 
