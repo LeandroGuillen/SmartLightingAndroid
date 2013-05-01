@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import um.cmovil.R;
+import um.cmovil.modelo.Controlador;
 import um.cmovil.modelo.ControladorFarolas;
 import um.cmovil.modelo.recursos.Farola;
 import um.cmovil.util.LocationOverlay;
@@ -43,6 +44,9 @@ public class MapViewActivity extends MapActivity {
 
 		map = (MapView) findViewById(R.id.map);
 		controller = map.getController();
+		if (!Controlador.getCookie().isEmpty())
+			Toast.makeText(MapViewActivity.this,"TENGO COOKIE!!!!!!",
+					Toast.LENGTH_LONG).show();
 
 		if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 			// Ask the user to enable GPS
@@ -110,7 +114,7 @@ public class MapViewActivity extends MapActivity {
 		// Google HeadQuarters 37.427,-122.099 set the icon of Google
 		locations.add(new GeoPoint(lat, lng));
 		images.add(getResources().getDrawable(R.drawable.bombilla_off));
-		
+
 		// Call the auxiliary class "LocationOverlay" based on ItemizedOverlay
 		LocationOverlay myOverlay = new LocationOverlay(this, getResources()
 				.getDrawable(R.drawable.bombilla_off));
@@ -144,6 +148,8 @@ public class MapViewActivity extends MapActivity {
 			int lat = (int) (location.getLatitude() * 1E6);
 			int lng = (int) (location.getLongitude() * 1E6);
 			GeoPoint point = new GeoPoint(lat, lng);
+			Toast.makeText(MapViewActivity.this, lat + "  " + lng,
+					Toast.LENGTH_LONG).show();
 			controller.setCenter(point);
 		}
 

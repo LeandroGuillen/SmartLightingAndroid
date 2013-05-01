@@ -52,6 +52,8 @@ public class FarolaListActivity extends Activity {
 
 	}
 
+	
+	// TODO : Hacer publica
 	private class FarolaUpdateListener implements DownloadListener {
 
 		@Override

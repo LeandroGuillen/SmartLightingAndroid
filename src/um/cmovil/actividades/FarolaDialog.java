@@ -31,7 +31,7 @@ public class FarolaDialog extends Dialog {
 	Button bOk;
 	Button bCancel;
 
-	protected FarolaDialog(Context context, Farola f, DownloadListener listener) {
+	public FarolaDialog(Context context, Farola f, DownloadListener listener) {
 		super(context);
 		this.farola = f;
 		this.listener = listener;
