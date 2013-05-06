@@ -69,7 +69,7 @@ public class LoginActivity extends Activity {
 
 		user.setText("sr4");
 		password.setText("soy el 4");
-		server.setText("192.168.1.10:8080");
+		server.setText("155.54.59.139:8080");
 	}
 
 	@Override

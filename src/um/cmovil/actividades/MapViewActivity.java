@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import um.cmovil.R;
 import um.cmovil.modelo.Controlador;
 import um.cmovil.modelo.ControladorFarolas;
-import um.cmovil.util.LocationOverlay;
+import um.cmovil.util.FarolaOverlay;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -98,13 +98,18 @@ public class MapViewActivity extends MapActivity {
 
 		// Google HeadQuarters 37.427,-122.099 set the icon of Google
 		images.add(getResources().getDrawable(R.drawable.bombilla_off));
+		images.add(getResources().getDrawable(R.drawable.bombilla_on));
+		
 		
 		
 		// Call the auxiliary class "LocationOverlay" based on ItemizedOverlay
-		LocationOverlay myOverlay = new LocationOverlay(this, getResources()
-				.getDrawable(R.drawable.bombilla_off));
-		myOverlay.setItems(ControladorFarolas.getListaFarolas(), images, new GeoPoint(lat, lat));
+		FarolaOverlay myOverlay = new FarolaOverlay(getResources()
+				.getDrawable(R.drawable.bombilla_off),this,map);
+		myOverlay.setItems(ControladorFarolas.getListaFarolas(), images);
 
+	//	MyPositionOverlay myPositionOverlay = new MyPositionOverlay()
+		
+		
 		// Add to the map the overlay
 		map.getOverlays().add(myOverlay);
 
