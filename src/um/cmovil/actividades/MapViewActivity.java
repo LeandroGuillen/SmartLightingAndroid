@@ -1,12 +1,10 @@
 package um.cmovil.actividades;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import um.cmovil.R;
 import um.cmovil.modelo.Controlador;
 import um.cmovil.modelo.ControladorFarolas;
-import um.cmovil.modelo.recursos.Farola;
 import um.cmovil.util.LocationOverlay;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -77,7 +75,6 @@ public class MapViewActivity extends MapActivity {
 
 		// Two arrays, one for the location and other for the images
 
-		ArrayList<GeoPoint> locations = new ArrayList<GeoPoint>();
 		ArrayList<Drawable> images = new ArrayList<Drawable>();
 
 		LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -97,32 +94,22 @@ public class MapViewActivity extends MapActivity {
 			lng = -122099167;
 		}
 
-		/*
-		 * EJEMPLO PARA MOSTRAR UNA FAROLA*
-		 */
-
-		// TODO :_ Interfaz para recoger datos de farolas y a–adirlas a
-		// locations.
-
-		List<Farola> listaFarolas = ControladorFarolas.getListaFarolas();
-
-		for (Farola farola : listaFarolas) {
-
-			locations.add(farola.getGeoPoint());
-		}
+		
 
 		// Google HeadQuarters 37.427,-122.099 set the icon of Google
-		locations.add(new GeoPoint(lat, lng));
 		images.add(getResources().getDrawable(R.drawable.bombilla_off));
-
+		
+		
 		// Call the auxiliary class "LocationOverlay" based on ItemizedOverlay
 		LocationOverlay myOverlay = new LocationOverlay(this, getResources()
 				.getDrawable(R.drawable.bombilla_off));
-		myOverlay.setItems(locations, images);
+		myOverlay.setItems(ControladorFarolas.getListaFarolas(), images, new GeoPoint(lat, lat));
 
 		// Add to the map the overlay
 		map.getOverlays().add(myOverlay);
 
+		// TODO : Posiblemente hay que a–adir otro overlay
+		
 		// Register for updates
 		int minTime = 100;
 		float minDistance = 0;

@@ -13,7 +13,6 @@ import org.json.JSONTokener;
 
 import um.cmovil.actividades.FarolaDialog;
 import um.cmovil.actividades.adaptadores.FarolaAdapter;
-import um.cmovil.modelo.ControladorFarolas;
 import um.cmovil.modelo.recursos.Farola;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -23,46 +22,57 @@ import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.OverlayItem;
 
 public class LocationOverlay extends ItemizedOverlay<OverlayItem> {
-	private List<GeoPoint> mItems;
 	private List<Drawable> mMarkers;
 	private List<Farola> listaFarolas;
 	private Context mContext;
 	private FarolaAdapter farolaAdapter;
+	private GeoPoint myLocation;
 
 	public LocationOverlay(Context context, Drawable marker) {
 		super(boundCenterBottom(marker));
 		mContext = context;
-		
-	//	listaFarolas = ControladorFarolas.getListaFarolas();
+
+		// listaFarolas = ControladorFarolas.getListaFarolas();
 	}
 
-	public void setItems(ArrayList<GeoPoint> items,
-			ArrayList<Drawable> drawables) {
-		mItems = items;
+	public void setItems(List<Farola> items, ArrayList<Drawable> drawables, GeoPoint myLocation) {
+		listaFarolas = items;
 		mMarkers = drawables;
+		this.myLocation = myLocation; 
+
 		populate();
 	}
 
 	protected OverlayItem createItem(int i) {
-		OverlayItem item = new OverlayItem(mItems.get(i), null, null);
+		OverlayItem item = new OverlayItem(listaFarolas.get(i).getGeoPoint(), null, null);
 		item.setMarker(boundCenterBottom(mMarkers.get(0)));
 		return item;
 	}
-
+	
+/*	protected OverlayItem createMyItem(){
+		OverlayItem item = new OverlayItem(myLocation, null, null);
+		item.setMarker(boundCenterBottom(mMarkers.get(1)));
+		return item;
+	}
+*/
+	
+	// TODO : Posibles soluciones: 1- A–adir otro overlay para el usuario. Combinar lista de farolas y punto de usuario
+	
+	
+	
+	
 	public int size() {
-		return mItems.size();
+		return listaFarolas.size();
 	}
 
 	protected boolean onTap(int i) {
 
-		new FarolaDialog(mContext, new Farola(),
-				new FarolaUpdateListener()).show();
-		
-		
+		new FarolaDialog(mContext, listaFarolas.get(i), new FarolaUpdateListener())
+				.show();
+
 		return true;
 	}
 
-	// TODO : Hacer publica
 	private class FarolaUpdateListener implements DownloadListener {
 
 		@Override
