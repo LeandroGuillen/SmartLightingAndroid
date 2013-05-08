@@ -16,9 +16,13 @@ import um.cmovil.util.DownloadListener;
 import um.cmovil.util.HTTPAsyncTask;
 import um.cmovil.util.HTTPRequest;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +36,8 @@ public class MainActivity extends Activity {
 	 * Falso - Estamos leyendo farolas por cualquier otro motivo
 	 */
 	private boolean listaFarolasIntentRunning;
+	LocationManager manager;
+
 	
 
 	@Override
@@ -51,6 +57,33 @@ public class MainActivity extends Activity {
 				Toast.LENGTH_LONG).show();
 
 		Toast.makeText(MainActivity.this, formStore.getString("Cookie", ""), Toast.LENGTH_LONG).show();
+		
+		if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+			// Ask the user to enable GPS
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle("Location Manager");
+			builder.setMessage("We would like to use your location, but GPS is currently disabled.\n"
+					+ "Would you like to change these settings now?");
+			builder.setPositiveButton("Yes",
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							// Launch settings, allowing user to make a change
+							Intent i = new Intent(
+									Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+							startActivity(i);
+						}
+					});
+			builder.setNegativeButton("No",
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							// No location service, no Activity
+							finish();
+						}
+					});
+			builder.create().show();
+		}
 
 		listaFarolasIntentRunning = false;
 	}

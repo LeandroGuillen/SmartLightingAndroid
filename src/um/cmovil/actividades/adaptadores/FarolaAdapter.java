@@ -3,8 +3,10 @@ package um.cmovil.actividades.adaptadores;
 import java.util.List;
 
 import um.cmovil.R;
+import um.cmovil.modelo.Controlador;
 import um.cmovil.modelo.recursos.Farola;
 import android.app.Activity;
+import android.location.Location;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,7 @@ import android.widget.TextView;
 public class FarolaAdapter extends ArrayAdapter<Farola> {
 	private final Activity context;
 	private final List<Farola> farolas;
+	
 
 	public FarolaAdapter(Activity context, List<Farola> farolas) {
 		super(context, R.layout.fila_farolas, farolas);
@@ -31,10 +34,14 @@ public class FarolaAdapter extends ArrayAdapter<Farola> {
 			LayoutInflater inflater = context.getLayoutInflater();
 			rowView = inflater.inflate(R.layout.fila_farolas, null);
 			ViewHolder viewHolder = new ViewHolder();
-			viewHolder.labelFarolaName = (TextView) rowView.findViewById(R.id.labelFarolaName);
-			viewHolder.labelDistancia = (TextView) rowView.findViewById(R.id.labelDistValue);
-			viewHolder.labelDim = (TextView) rowView.findViewById(R.id.labelDimValue);
-			viewHolder.imageBombilla = (ImageView) rowView.findViewById(R.id.iconBombilla);
+			viewHolder.labelFarolaName = (TextView) rowView
+					.findViewById(R.id.labelFarolaName);
+			viewHolder.labelDistancia = (TextView) rowView
+					.findViewById(R.id.labelDistValue);
+			viewHolder.labelDim = (TextView) rowView
+					.findViewById(R.id.labelDimValue);
+			viewHolder.imageBombilla = (ImageView) rowView
+					.findViewById(R.id.iconBombilla);
 			rowView.setTag(viewHolder);
 		}
 
@@ -42,7 +49,16 @@ public class FarolaAdapter extends ArrayAdapter<Farola> {
 		ViewHolder holder = (ViewHolder) rowView.getTag();
 		Farola farola = farolas.get(position);
 		holder.labelFarolaName.setText(farola.getNombre());
-		holder.labelDistancia.setText(farola.getDistancia().toString() + "m");
+
+		float[] result = new float[3];
+		double lat = Controlador.getLatitude();
+		double lon = Controlador.getLongitude();
+		Location.distanceBetween(farola.getGeoPoint().getLatitudeE6(), farola
+				.getGeoPoint().getLongitudeE6(), lat, lon, result);
+		if(result[0] > 30){
+			// Icono o indicador para indicar que no se puede modificar
+		}
+		holder.labelDistancia.setText(result[0] + "m");
 		holder.labelDim.setText(farola.getDim().toString());
 
 		// Segun la farola este encendida se muestra una imagen u otra
