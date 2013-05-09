@@ -22,7 +22,6 @@ import com.google.android.maps.MapView;
 
 public class MapViewActivity extends MapActivity {
 
-	LocationManager manager;
 	Location currentLocation;
 	String selectedProvider;
 
@@ -34,8 +33,6 @@ public class MapViewActivity extends MapActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_map);
-		manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
 		map = (MapView) findViewById(R.id.map);
 		controller = map.getController();
 		if (!Controlador.getCookie().isEmpty())

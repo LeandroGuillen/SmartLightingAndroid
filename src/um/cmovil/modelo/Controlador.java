@@ -2,15 +2,16 @@ package um.cmovil.modelo;
 
 import android.location.LocationManager;
 
-
 public class Controlador {
 	private static String userAgent;
 	private static String key;
 	private static String server;
-	
+
 	private static LocationManager manager;
 
-	private static String cookie ="";
+	private static String cookie = "";
+	private static double latitude;
+	private static double longitude;
 
 	public static String getServer() {
 		return server;
@@ -38,8 +39,6 @@ public class Controlador {
 		Controlador.key = key;
 	}
 
-
-
 	public static void setCookie(String cookie) {
 		Controlador.cookie = cookie;
 	}
@@ -49,13 +48,21 @@ public class Controlador {
 	}
 
 	public static double getLatitude() {
-		
-		return manager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLatitude() * 1000000;
-			}
+
+		return latitude;
+	}
 
 	public static double getLongitude() {
-		// TODO Auto-generated method stub
-		return manager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLongitude() * 1000000;
+		return longitude;
+	}
+
+	public static void setLatitude(double d) {
+		latitude = d;
+
+	}
+
+	public static void setLongitude(double d) {
+		longitude = d;
 	}
 
 }

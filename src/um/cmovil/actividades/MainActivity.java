@@ -17,6 +17,7 @@ import um.cmovil.util.HTTPAsyncTask;
 import um.cmovil.util.HTTPRequest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -53,6 +54,10 @@ public class MainActivity extends Activity {
 
 		obtenerDatosTiempo();
 
+		
+
+		manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
 		Toast.makeText(MainActivity.this, formStore.getString("Cookie", ""),
 				Toast.LENGTH_LONG).show();
 
@@ -83,8 +88,15 @@ public class MainActivity extends Activity {
 						}
 					});
 			builder.create().show();
+			
+			
 		}
 
+		Controlador.setLatitude(manager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+				.getLatitude() * 1000000);
+		Controlador.setLongitude(manager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+				.getLongitude() * 1000000);
+		
 		listaFarolasIntentRunning = false;
 	}
 
