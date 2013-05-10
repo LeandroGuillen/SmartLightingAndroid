@@ -164,7 +164,7 @@ public class FarolaListActivity extends Activity {
 		public void onLocationChanged(Location location) {
 			Controlador.setLatitude(location.getLatitude() * 1E6);
 			Controlador.setLongitude(location.getLongitude() * 1E6);
-
+			farolaAdapter.notifyDataSetChanged();
 		}
 
 		@Override

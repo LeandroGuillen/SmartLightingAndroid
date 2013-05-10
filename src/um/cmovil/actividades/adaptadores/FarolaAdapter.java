@@ -17,6 +17,7 @@ import android.widget.TextView;
 public class FarolaAdapter extends ArrayAdapter<Farola> {
 	private final Activity context;
 	private final List<Farola> farolas;
+	private int DISTANCIAMINIMA=30;
 	
 
 	public FarolaAdapter(Activity context, List<Farola> farolas) {
@@ -48,17 +49,10 @@ public class FarolaAdapter extends ArrayAdapter<Farola> {
 		// Asignar los valores de la farola a los labels de la fila
 		ViewHolder holder = (ViewHolder) rowView.getTag();
 		Farola farola = farolas.get(position);
+		
+		// Rellenar campos de la fila
+		
 		holder.labelFarolaName.setText(farola.getNombre());
-
-		float[] result = new float[3];
-		double lat = Controlador.getLatitude();
-		double lon = Controlador.getLongitude();
-		Location.distanceBetween(farola.getGeoPoint().getLatitudeE6(), farola
-				.getGeoPoint().getLongitudeE6(), lat, lon, result);
-		if(result[0] > 30){
-			// Icono o indicador para indicar que no se puede modificar
-		}
-		holder.labelDistancia.setText(result[0] + "m");
 		holder.labelDim.setText(farola.getDim().toString());
 
 		// Segun la farola este encendida se muestra una imagen u otra
@@ -68,6 +62,25 @@ public class FarolaAdapter extends ArrayAdapter<Farola> {
 			holder.imageBombilla.setImageResource(R.drawable.bombilla_off);
 		}
 
+		// Comprobar que la farola esta cerca de nosotros
+		float[] result = new float[3];
+		double lat = Controlador.getLatitude();
+		double lon = Controlador.getLongitude();
+		if (lat != 0.0 && lon != 0.0) {
+			double fLat = farola.getGeoPoint().getLatitudeE6();
+			double fLon = farola.getGeoPoint().getLongitudeE6();
+			Location.distanceBetween(fLat, fLon, lat, lon, result);
+			holder.labelDistancia.setText((int)(result[0] / 1E6) + "m");
+			if(result[0] / 1E6 > DISTANCIAMINIMA){
+				// Icono o indicador para indicar que no se puede modificar
+				rowView.setEnabled(false);
+			} else{
+				rowView.setEnabled(true);
+			}
+		} else {
+			holder.labelDistancia.setText("?m");
+		}
+		
 		return rowView;
 	}
 
