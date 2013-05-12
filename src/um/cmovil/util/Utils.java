@@ -35,6 +35,18 @@ public class Utils {
 			return null;
 		}
 	}
+	
+	public static String sha1(String source) {
+		try {
+			MessageDigest sha = MessageDigest.getInstance("SHA-1");
+			byte[] bytes = sha.digest(source.getBytes("UTF-8"));
+			return getString(bytes);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 
 	private static String getString(byte[] bytes) {
 		StringBuffer sb = new StringBuffer();
