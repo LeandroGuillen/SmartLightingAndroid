@@ -25,15 +25,15 @@
         </activity>
         <activity
             android:name="um.cmovil.actividades.LoginActivity"
-            android:label="@string/title_activity_login" >
+            android:label="@string/title_activity_login"
+            android:noHistory="true"
+            android:parentActivityName="um.cmovil.actividades.MainActivityMainActivity"
+            android:windowSoftInputMode="adjustResize|stateVisible" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            android:noHistory="true"
-            android:parentActivityName="um.cmovil.actividades.MainActivityMainActivity"
-            android:windowSoftInputMode="adjustResize|stateVisible" >
         </activity>
         <activity
             android:name="um.cmovil.actividades.FarolaListActivity"
