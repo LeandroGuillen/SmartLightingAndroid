@@ -10,6 +10,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 
 import um.cmovil.modelo.Controlador;
+import um.cmovil.modelo.HashType;
 import android.content.Context;
 import android.os.AsyncTask;
 
@@ -25,6 +26,7 @@ public class HTTPAsyncTask extends AsyncTask<HTTPRequest, String, HttpResponse> 
 		String URL = httpreq.getURL();
 		String userAgent = Controlador.getUserAgent();
 		String key = Controlador.getKey();
+		HashType hashType = Controlador.getHashType();
 
 		HttpResponse response = null;
 
@@ -39,6 +41,7 @@ public class HTTPAsyncTask extends AsyncTask<HTTPRequest, String, HttpResponse> 
 				get.addHeader("User-Agent", userAgent);
 				get.addHeader(HTTP.DATE_HEADER, time);
 				get.addHeader("Content-Length", "0");
+				get.addHeader("HashType", hashType.toString());
 
 				if (!Controlador.getCookie().isEmpty())
 
