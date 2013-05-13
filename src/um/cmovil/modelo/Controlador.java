@@ -8,6 +8,8 @@ public class Controlador {
 	private static String cookie = "";
 	private static double latitude = 0.0;
 	private static double longitude = 0.0;
+	
+	private static HashType hashType;
 
 	public static String getServer() {
 		return server;
@@ -59,6 +61,14 @@ public class Controlador {
 
 	public static void setLongitude(double d) {
 		Controlador.longitude = d;
+	}
+
+	public static HashType getHashType() {
+		return hashType;
+	}
+
+	public static void setHashType(HashType hashType) {
+		Controlador.hashType = hashType;
 	}
 
 }
