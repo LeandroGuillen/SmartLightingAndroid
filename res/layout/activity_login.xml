@@ -48,6 +48,13 @@
         android:layout_height="wrap_content"
         android:ems="10" />
 
+    <TextView
+        android:id="@+id/TextView01"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dip"
+        android:text="Authentication" />
+
     <Spinner
         android:id="@+id/spinner1"
         android:layout_width="match_parent"
@@ -57,7 +64,7 @@
         android:id="@+id/LoginButton"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="LogIn" 
-        android:onClick="logIn"/>
+        android:onClick="logIn"
+        android:text="LogIn" />
 
 </LinearLayout>
