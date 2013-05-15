@@ -38,7 +38,7 @@ public class Utils {
 	
 	public static String sha1(String source) {
 		try {
-			MessageDigest sha = MessageDigest.getInstance("SHA-1");
+			MessageDigest sha = MessageDigest.getInstance("SHA1");
 			byte[] bytes = sha.digest(source.getBytes("UTF-8"));
 			return getString(bytes);
 		} catch (Exception e) {

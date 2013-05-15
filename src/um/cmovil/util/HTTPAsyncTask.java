@@ -47,9 +47,12 @@ public class HTTPAsyncTask extends AsyncTask<HTTPRequest, String, HttpResponse> 
 
 					get.addHeader("Cookie", Controlador.getCookie());
 
-				else
+				else if(Controlador.getHashType().equals(HashType.MD5))
 
 					get.addHeader("apiKey", Utils.md5(Utils.md5(key) + time));
+
+				else
+					get.addHeader("apiKey", Utils.sha1(Utils.sha1(key) + time));
 
 				HttpClient client = new DefaultHttpClient();
 				response = client.execute(get);
