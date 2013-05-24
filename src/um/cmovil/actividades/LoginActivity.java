@@ -9,7 +9,6 @@ import um.cmovil.util.DownloadListener;
 import um.cmovil.util.HTTPAsyncTask;
 import um.cmovil.util.HTTPRequest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -35,9 +34,10 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		
+
 		Spinner spinner = (Spinner) findViewById(R.id.spinner1);
-		// Create an ArrayAdapter using the string array and a default spinner layout
+		// Create an ArrayAdapter using the string array and a default spinner
+		// layout
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.hashtypes, android.R.layout.simple_spinner_item);
 		// Specify the layout to use when the list of choices appears
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -69,13 +69,11 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 		super.onResume();
 		// Set a Toast to notify that it is onResume
 
-		Context context = getApplicationContext();
-		CharSequence text = "onResume!";
-
-		int duration = Toast.LENGTH_SHORT;
-
-		Toast toast = Toast.makeText(context, text, duration);
-		toast.show();
+		// Context context = getApplicationContext();
+		// CharSequence text = "onResume!";
+		// int duration = Toast.LENGTH_SHORT;
+		// Toast toast = Toast.makeText(context, text, duration);
+		// toast.show();
 
 		// Restore the form data
 		user.setText(formStore.getString("user", ""));
@@ -92,11 +90,11 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 		super.onPause();
 
 		// Set a Toast to notify that it is onResume
-		Context context = getApplicationContext();
-		CharSequence text = "onPause!";
-		int duration = Toast.LENGTH_SHORT;
-		Toast toast = Toast.makeText(context, text, duration);
-		toast.show();
+		// Context context = getApplicationContext();
+		// CharSequence text = "onPause!";
+		// int duration = Toast.LENGTH_SHORT;
+		// Toast toast = Toast.makeText(context, text, duration);
+		// toast.show();
 
 		if (submitSuccess) {
 			// Editor calls can be chained together
@@ -123,15 +121,13 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 
 			Controlador.setKey(password.getText().toString());
 			Controlador.setServer(server.getText().toString());
-			HTTPRequest httpRequest = new HTTPRequest(this, "/auth",
-					new MyDownloadListener());
+			HTTPRequest httpRequest = new HTTPRequest(this, "/auth", new MyDownloadListener());
 
 			new HTTPAsyncTask().execute(httpRequest);
 
 		} else {
 
-			Toast.makeText(getApplicationContext(),
-					"Revisa los datos de login", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), "Revisa los datos de login", Toast.LENGTH_SHORT).show();
 		}
 
 	}
@@ -146,10 +142,9 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 		// FIXME : Se podria indicar alguna validacion m�s, por ejemplo la
 		// longitud del password o el formato de direccion del servidor
 
-		Toast.makeText(LoginActivity.this, "VALIDANDO FORMULARIO",
-				Toast.LENGTH_SHORT).show();
-		return user.getTextSize() != 0 && password.getTextSize() != 0
-				&& server.getTextSize() != 0;
+		// Toast.makeText(LoginActivity.this, "VALIDANDO FORMULARIO",
+		// Toast.LENGTH_SHORT).show();
+		return user.getTextSize() != 0 && password.getTextSize() != 0 && server.getTextSize() != 0;
 	}
 
 	private class MyDownloadListener implements DownloadListener {
@@ -158,13 +153,12 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 		public void downloadOk(HttpResponse response) {
 			// TODO : Coger la respuesta y extraer datos de ella
 			System.out.println("LoginActivity.MyDownloadListener.downloadOk()");
-			Toast.makeText(LoginActivity.this, "Conexi�n aceptada",
-					Toast.LENGTH_SHORT).show();
+			// Toast.makeText(LoginActivity.this, "Conexi�n aceptada",
+			// Toast.LENGTH_SHORT).show();
 			Controlador.setCookie(response.getHeaders("Cookie")[0].getValue());
 			// TODO : Almacenar cookie en shared
 			SharedPreferences.Editor editor = formStore.edit();
-			editor.putString("Cookie",
-					response.getHeaders("Cookie")[0].getValue());
+			editor.putString("Cookie", response.getHeaders("Cookie")[0].getValue());
 			editor.commit();
 			goToMainActivity(null);
 			finish();
@@ -172,9 +166,7 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 
 		@Override
 		public void downloadFailed() {
-			Toast.makeText(LoginActivity.this,
-					"No se pudo realizar la conexión", Toast.LENGTH_SHORT)
-					.show();
+			Toast.makeText(LoginActivity.this, "No se pudo realizar la conexión", Toast.LENGTH_SHORT).show();
 		}
 	}
 

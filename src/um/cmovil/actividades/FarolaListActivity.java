@@ -44,49 +44,43 @@ public class FarolaListActivity extends Activity {
 
 		manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-		Toast.makeText(FarolaListActivity.this,
-				"lat" + Controlador.getLatitude(), Toast.LENGTH_LONG).show();
+		// Toast.makeText(FarolaListActivity.this, "lat" +
+		// Controlador.getLatitude(), Toast.LENGTH_LONG).show();
 
 		if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 			// Ask the user to enable GPS
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setTitle("Location Manager");
-			builder.setMessage("We would like to use your location, but GPS is currently disabled.\n"
-					+ "Would you like to change these settings now?");
-			builder.setPositiveButton("Yes",
-					new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							// Launch settings, allowing user to make a change
-							Intent i = new Intent(
-									Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-							startActivity(i);
-						}
-					});
-			builder.setNegativeButton("No",
-					new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							// No location service, no Activity
-							finish();
-						}
-					});
+			builder.setTitle("GPS");
+			builder.setMessage("Es necesario activar el GPS para continuar.\n" + "¿Te gustaria hacerlo ahora?");
+			builder.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// Launch settings, allowing user to make a change
+					Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+					startActivity(i);
+				}
+			});
+			builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// No location service, no Activity
+					finish();
+				}
+			});
 			builder.create().show();
 
 		}
 		manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-		Location location = manager
-				.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+		Location location = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
 		if (location != null) {
 
 			Controlador.setLatitude(location.getLatitude() * 1000000);
 			Controlador.setLongitude(location.getLongitude() * 1000000);
 
-		} 
-		manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 0,
-				listener);
+		}
+		manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 0, listener);
 
 		prepararLista();
 	}
@@ -96,18 +90,15 @@ public class FarolaListActivity extends Activity {
 		// We get the ListView component from the layout
 		final ListView lv = (ListView) findViewById(R.id.listViewFarolas);
 
-		farolaAdapter = new FarolaAdapter(this,
-				ControladorFarolas.getListaFarolas());
+		farolaAdapter = new FarolaAdapter(this, ControladorFarolas.getListaFarolas());
 		lv.setAdapter(farolaAdapter);
 
 		lv.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
 				Farola f = (Farola) lv.getAdapter().getItem(position);
-				new FarolaDialog(FarolaListActivity.this, f,
-						new FarolaUpdateListener()).show();
+				new FarolaDialog(FarolaListActivity.this, f, new FarolaUpdateListener()).show();
 			}
 		});
 
@@ -122,9 +113,7 @@ public class FarolaListActivity extends Activity {
 			farolaAdapter.notifyDataSetChanged();
 			try {
 				// Interpretar la respuesta
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(
-								response.getEntity().getContent(), "UTF-8"));
+				BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
 				StringBuilder builder = new StringBuilder();
 
 				for (String line = null; (line = reader.readLine()) != null;) {
@@ -135,17 +124,13 @@ public class FarolaListActivity extends Activity {
 				JSONObject json = new JSONObject(tokener);
 
 				// Muestra en la pantalla la respuesta del servidor
-				Toast.makeText(FarolaListActivity.this,
-						json.getString("status"), Toast.LENGTH_SHORT).show();
+				Toast.makeText(FarolaListActivity.this, json.getString("status"), Toast.LENGTH_SHORT).show();
 
 			} catch (IOException e) {
-				Toast.makeText(FarolaListActivity.this, "Error de E/S",
-						Toast.LENGTH_SHORT).show();
+				Toast.makeText(FarolaListActivity.this, "Error de E/S", Toast.LENGTH_SHORT).show();
 				e.printStackTrace();
 			} catch (JSONException e) {
-				Toast.makeText(FarolaListActivity.this,
-						"Error al decodificar la respuesta JSON",
-						Toast.LENGTH_SHORT).show();
+				Toast.makeText(FarolaListActivity.this, "Error al decodificar la respuesta JSON", Toast.LENGTH_SHORT).show();
 				e.printStackTrace();
 			}
 
@@ -153,8 +138,7 @@ public class FarolaListActivity extends Activity {
 
 		@Override
 		public void downloadFailed() {
-			Toast.makeText(FarolaListActivity.this,
-					"No se pudo guardar la farola", Toast.LENGTH_SHORT).show();
+			Toast.makeText(FarolaListActivity.this, "No se pudo guardar la farola", Toast.LENGTH_SHORT).show();
 		}
 	}
 

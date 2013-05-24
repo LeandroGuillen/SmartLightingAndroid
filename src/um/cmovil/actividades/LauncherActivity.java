@@ -19,7 +19,7 @@ public class LauncherActivity extends Activity {
 	}
 
 	protected void onStart() {
-super.onStart();
+		super.onStart();
 		formStore = getSharedPreferences(PREFS_NAME, 0);
 
 		if (formStore.getString("Cookie", "").equals("")) {
@@ -29,9 +29,6 @@ super.onStart();
 			mainActivity();
 		}
 
-		
-		
-		
 	}
 
 	private void logIn() {

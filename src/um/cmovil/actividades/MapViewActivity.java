@@ -3,7 +3,6 @@ package um.cmovil.actividades;
 import java.util.ArrayList;
 
 import um.cmovil.R;
-import um.cmovil.modelo.Controlador;
 import um.cmovil.modelo.ControladorFarolas;
 import um.cmovil.util.FarolaOverlay;
 import android.app.AlertDialog;
@@ -17,7 +16,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
@@ -40,36 +38,32 @@ public class MapViewActivity extends MapActivity {
 		setContentView(R.layout.activity_map);
 		map = (MapView) findViewById(R.id.map);
 		controller = map.getController();
-		if (!Controlador.getCookie().isEmpty())
-			Toast.makeText(MapViewActivity.this, "TENGO COOKIE!!!!!!",
-					Toast.LENGTH_LONG).show();
+		// if (!Controlador.getCookie().isEmpty())
+		// Toast.makeText(MapViewActivity.this, "TENGO COOKIE!!!!!!",
+		// Toast.LENGTH_LONG).show();
 
 		manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
 		if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 			// Ask the user to enable GPS
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setTitle("Location Manager");
-			builder.setMessage("We would like to use your location, but GPS is currently disabled.\n"
-					+ "Would you like to change these settings now?");
-			builder.setPositiveButton("Yes",
-					new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							// Launch settings, allowing user to make a change
-							Intent i = new Intent(
-									Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-							startActivity(i);
-						}
-					});
-			builder.setNegativeButton("No",
-					new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							// No location service, no Activity
-							finish();
-						}
-					});
+			builder.setTitle("GPS");
+			builder.setMessage("Es necesario activar el GPS para continuar.\n" + "Â¿Te gustaria hacerlo ahora?");
+			builder.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// Launch settings, allowing user to make a change
+					Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+					startActivity(i);
+				}
+			});
+			builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// No location service, no Activity
+					finish();
+				}
+			});
 			builder.create().show();
 
 		}
@@ -79,15 +73,14 @@ public class MapViewActivity extends MapActivity {
 		ArrayList<Drawable> images = new ArrayList<Drawable>();
 
 		LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		Location location = manager
-				.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+		Location location = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 		int lat, lng;
 		if (location != null) {
 
 			// Convert to microdegrees
 			lat = (int) (location.getLatitude() * 1000000);
 			lng = (int) (location.getLongitude() * 1000000);
-			Toast.makeText(this, lat + " " + lng, Toast.LENGTH_LONG).show();
+			// Toast.makeText(this, lat + " " + lng, Toast.LENGTH_LONG).show();
 
 		} else {
 			// Default to Google HQ
@@ -100,8 +93,7 @@ public class MapViewActivity extends MapActivity {
 		images.add(getResources().getDrawable(R.drawable.bombilla_on));
 
 		// Call the auxiliary class "LocationOverlay" based on ItemizedOverlay
-		FarolaOverlay myOverlay = new FarolaOverlay(getResources().getDrawable(
-				R.drawable.bombilla_off), this, map);
+		FarolaOverlay myOverlay = new FarolaOverlay(getResources().getDrawable(R.drawable.bombilla_off), this, map);
 		myOverlay.setItems(ControladorFarolas.getListaFarolas(), images);
 
 		// MyPositionOverlay myPositionOverlay = new MyPositionOverlay()
@@ -109,13 +101,12 @@ public class MapViewActivity extends MapActivity {
 		// Add to the map the overlay
 		map.getOverlays().add(myOverlay);
 
-		// TODO : Posiblemente hay que a–adir otro overlay
+		// TODO : Posiblemente hay que aï¿½adir otro overlay
 
 		// Register for updates
 		int minTime = 100;
 		float minDistance = 0;
-		manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, minTime,
-				minDistance, listener);
+		manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, minTime, minDistance, listener);
 		GeoPoint mapCenter = new GeoPoint(lat, lng);
 		controller.setCenter(mapCenter);
 		controller.setZoom(15);
@@ -136,8 +127,8 @@ public class MapViewActivity extends MapActivity {
 			int lat = (int) (location.getLatitude() * 1E6);
 			int lng = (int) (location.getLongitude() * 1E6);
 			GeoPoint point = new GeoPoint(lat, lng);
-			Toast.makeText(MapViewActivity.this, lat + "  " + lng,
-					Toast.LENGTH_LONG).show();
+			// Toast.makeText(MapViewActivity.this, lat + "  " + lng,
+			// Toast.LENGTH_LONG).show();
 			controller.setCenter(point);
 		}
 

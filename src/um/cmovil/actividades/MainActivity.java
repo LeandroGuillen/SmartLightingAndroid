@@ -20,6 +20,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,8 +34,6 @@ public class MainActivity extends Activity {
 	 */
 	private boolean listaFarolasIntentRunning;
 
-	
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -43,22 +42,31 @@ public class MainActivity extends Activity {
 		formStore = getSharedPreferences(PREFS_NAME, 0);
 
 		Controlador.setServer(formStore.getString("server", ""));
-		
-		TextView tvServer = (TextView) findViewById(R.id.maServidor);
-		tvServer.setText(Controlador.getServer());
+
+		comprobarStatus();
 
 		obtenerDatosTiempo();
 
-		
-
-		
 		listaFarolasIntentRunning = false;
+	}
+
+	private void comprobarStatus() {
+		// Mostrar direccion del servidor
+		TextView tvServer = (TextView) findViewById(R.id.maServidor);
+		tvServer.setText(Controlador.getServer());
+
+		// Comprobar estado: si estamos aqui es porque acabamos de
+		// autenticarnos, asi que todo esta OK. TODO Seria interesante realizar
+		// esta operacion periodicamente para que el usuario vea que sigue
+		// conectado.
+		CheckBox cbStatus = (CheckBox) findViewById(R.id.checkBox1);
+		cbStatus.setChecked(true);
+
 	}
 
 	public void obtenerDatosTiempo() {
 		// Cargar datos del tiempo
-		HTTPRequest statusRequest = new HTTPRequest(this, "/resources/weather",
-				new TiempoDownloadListener());
+		HTTPRequest statusRequest = new HTTPRequest(this, "/resources/weather", new TiempoDownloadListener());
 		new HTTPAsyncTask().execute(statusRequest);
 
 	}
@@ -73,8 +81,7 @@ public class MainActivity extends Activity {
 			new HTTPAsyncTask().execute(request);
 		} else {
 			// Lanzar la actividad nueva
-			Intent intent = new Intent(MainActivity.this,
-					FarolaListActivity.class);
+			Intent intent = new Intent(MainActivity.this, FarolaListActivity.class);
 			startActivity(intent);
 		}
 	}
@@ -93,6 +100,10 @@ public class MainActivity extends Activity {
 		}
 	}
 
+	public void verGraficos(View view){
+		
+	}
+	
 	private class FarolasDownloadListener implements DownloadListener {
 
 		@Override
@@ -109,35 +120,24 @@ public class MainActivity extends Activity {
 					startActivity(intent);
 
 					listaFarolasIntentRunning = false;
-				}else{
+				} else {
 					Intent intent = new Intent(MainActivity.this, MapViewActivity.class);
 					startActivity(intent);
 
 					listaFarolasIntentRunning = false;
-					
-					
+
 				}
 
 			} catch (JSONException e) {
-				Toast.makeText(
-						MainActivity.this,
-						"Error al formar el JSON de los datos recibidos del servidor",
-						Toast.LENGTH_SHORT).show();
-				e.printStackTrace();
+				Toast.makeText(MainActivity.this, "Error al formar el JSON de los datos recibidos del servidor", Toast.LENGTH_SHORT).show();
 			} catch (IOException e) {
-				Toast.makeText(
-						MainActivity.this,
-						"Error de E/S al formar el JSON de los datos recibidos del servidor",
-						Toast.LENGTH_SHORT).show();
-				e.printStackTrace();
+				Toast.makeText(MainActivity.this, "Error de E/S al formar el JSON de los datos recibidos del servidor", Toast.LENGTH_SHORT).show();
 			}
 		}
 
 		@Override
 		public void downloadFailed() {
-			Toast.makeText(MainActivity.this,
-					"No se pudo realizar la conexión", Toast.LENGTH_SHORT)
-					.show();
+			Toast.makeText(MainActivity.this, "No se pudo realizar la conexión", Toast.LENGTH_SHORT).show();
 		}
 	}
 
@@ -145,7 +145,7 @@ public class MainActivity extends Activity {
 
 		@Override
 		public void downloadOk(HttpResponse response) {
-			String mensaje = "Recibidos los datos meteorologicos del servidor";
+			String mensaje = "Informacion del tiempo actualizada";
 			try {
 				ControladorTiempo.addTiempo(response);
 
@@ -183,16 +183,13 @@ public class MainActivity extends Activity {
 				mensaje = "Error al recibir los datos sobre el tiempo: formato de fecha mal formado";
 				e.printStackTrace();
 			} finally {
-				Toast.makeText(MainActivity.this, mensaje, Toast.LENGTH_LONG)
-						.show();
+				Toast.makeText(MainActivity.this, mensaje, Toast.LENGTH_LONG).show();
 			}
 		}
 
 		@Override
 		public void downloadFailed() {
-			Toast.makeText(MainActivity.this,
-					"No se pudo realizar la conexión", Toast.LENGTH_SHORT)
-					.show();
+			Toast.makeText(MainActivity.this, "No se pudo realizar la conexión", Toast.LENGTH_SHORT).show();
 		}
 	}
 
