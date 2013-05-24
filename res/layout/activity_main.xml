@@ -48,6 +48,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:background="@drawable/boton_menu"
         android:onClick="verListaFarolas"
         android:text="Farolas" />
 
@@ -56,14 +57,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Mapa"
-        android:onClick="verMapa" />
-
+        android:background="@drawable/boton_menu"
+        android:onClick="verMapa"
+        android:text="Mapa" />
+    
     <Button
+        android:id="@+id/botonGrafica"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="[Otro botón]" />
+        android:background="@drawable/boton_menu"
+        android:onClick="verGraficos"
+        android:text="Graficos" />
 
     <LinearLayout
         android:layout_width="match_parent"
