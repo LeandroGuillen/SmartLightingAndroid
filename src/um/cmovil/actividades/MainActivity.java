@@ -66,9 +66,8 @@ public class MainActivity extends Activity {
 
 	public void obtenerDatosTiempo() {
 		// Cargar datos del tiempo
-		HTTPRequest statusRequest = new HTTPRequest(this, "/resources/weather", new TiempoDownloadListener());
+		HTTPRequest statusRequest = new HTTPRequest(this, "/resources/weather/list", new TiempoDownloadListener());
 		new HTTPAsyncTask().execute(statusRequest);
-
 	}
 
 	public void verListaFarolas(View view) {
@@ -100,10 +99,12 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	public void verGraficos(View view){
-		
+	public void verGraficos(View view) {
+		// Lanzar la actividad nueva
+		Intent intent = new Intent(this, ChartActivity.class);
+		startActivity(intent);
 	}
-	
+
 	private class FarolasDownloadListener implements DownloadListener {
 
 		@Override
@@ -192,5 +193,4 @@ public class MainActivity extends Activity {
 			Toast.makeText(MainActivity.this, "No se pudo realizar la conexión", Toast.LENGTH_SHORT).show();
 		}
 	}
-
 }
