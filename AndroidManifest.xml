@@ -48,6 +48,11 @@
             android:label="@string/title_activity_launcher"
             android:noHistory="true" >
         </activity>
+        <activity
+            android:name="um.cmovil.actividades.ChartActivity"
+            android:label="@string/title_activity_chart"
+            android:parentActivityName="um.cmovil.actividades.MainActivity" >
+        </activity>
     </application>
 
 </manifest>

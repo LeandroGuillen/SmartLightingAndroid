@@ -10,5 +10,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_map">MapActivity</string>
     <string name="title_activity_launcher">LauncherActivity</string>
+    <string name="title_activity_chart">ChartActivity</string>
 
 </resources>
